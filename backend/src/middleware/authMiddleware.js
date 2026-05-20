@@ -1,8 +1,15 @@
 import jwt from 'jsonwebtoken';
-import fetch from 'node-fetch';
+import jwkToPem from 'jwk-to-pem';
 
 const COGNITO_REGION = process.env.COGNITO_REGION || 'us-east-1';
 const COGNITO_USER_POOL_ID = process.env.COGNITO_USER_POOL_ID;
+const COGNITO_CLIENT_ID = process.env.COGNITO_CLIENT_ID;
+
+export const MANAGER_ROLES = ['Manager', 'Admin'];
+
+export function isManagerRole(role) {
+  return MANAGER_ROLES.includes(role);
+}
 
 // Cache public keys to avoid repeated API calls
 let publicKeyCache = null;
@@ -64,6 +71,15 @@ export async function authenticateToken(req, res, next) {
       issuer: `https://cognito-idp.${COGNITO_REGION}.amazonaws.com/${COGNITO_USER_POOL_ID}`
     });
 
+    if (COGNITO_CLIENT_ID) {
+      if (verified.token_use === 'access' && verified.client_id !== COGNITO_CLIENT_ID) {
+        throw new Error('Invalid access token audience');
+      }
+      if (verified.token_use === 'id' && verified.aud !== COGNITO_CLIENT_ID) {
+        throw new Error('Invalid id token audience');
+      }
+    }
+
     // Attach user info to request
     req.user = {
       userId: verified.sub,
@@ -83,19 +99,6 @@ export async function authenticateToken(req, res, next) {
       message: 'Invalid or expired token'
     });
   }
-}
-
-// Simple JWK to PEM converter
-function jwkToPem(jwk) {
-  // This is a simplified converter; in production use 'jwk-to-pem' library
-  if (jwk.kty !== 'RSA' || !jwk.n || !jwk.e) {
-    throw new Error('Invalid JWK format');
-  }
-
-  // For now, return a placeholder; in production, use proper conversion
-  // eslint-disable-next-line no-console
-  console.warn('Using simplified JWK conversion; use jwk-to-pem library in production');
-  return jwk;
 }
 
 // Role-based access control middleware
@@ -133,7 +136,7 @@ export function requireTeamAccess(teamIdParam = 'teamId') {
     }
 
     // Managers can access any team
-    if (req.user.role === 'Manager') {
+    if (isManagerRole(req.user.role)) {
       next();
       return;
     }

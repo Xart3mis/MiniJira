@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
+import { authenticateToken } from './middleware/authMiddleware.js';
+import apiRoutes from './routes/index.js';
 
 dotenv.config();
 
@@ -26,6 +28,8 @@ app.use(morgan('combined'));
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
+
+app.use('/api/v1', authenticateToken, apiRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

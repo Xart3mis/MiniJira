@@ -54,6 +54,8 @@ This starts:
    ```
    COGNITO_USER_POOL_ID=us-east-1_XXXXXXXXX
    COGNITO_CLIENT_ID=your_client_id
+   VITE_COGNITO_USER_POOL_ID=us-east-1_XXXXXXXXX
+   VITE_COGNITO_CLIENT_ID=your_client_id
    ```
 
 ### Phase 2: Database (DynamoDB)
@@ -83,9 +85,17 @@ Create the following tables:
   ```
   taskId, projectId, teamId, assigneeId
   title, description, status, priority, deadline
-  imageUrl, imageVersions (list)
-  createdAt, updatedAt
-  ```
+   imageUrl, imageVersions (list)
+   createdAt, updatedAt
+   ```
+
+#### Required DynamoDB index names
+Add these to `.env` to match the index names created in DynamoDB:
+```
+DYNAMODB_TASKS_TEAM_INDEX=teamId-index
+DYNAMODB_TASKS_ASSIGNEE_INDEX=assigneeId-index
+DYNAMODB_PROJECTS_TEAM_INDEX=teamId-index
+```
 
 #### Comments Table
 - Primary Key: `taskId` (String)
