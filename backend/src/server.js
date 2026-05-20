@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
+import rateLimit from 'express-rate-limit';
 import { authenticateToken } from './middleware/authMiddleware.js';
 import apiRoutes from './routes/index.js';
 
@@ -29,7 +30,14 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-app.use('/api/v1', authenticateToken, apiRoutes);
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 200,
+  standardHeaders: true,
+  legacyHeaders: false
+});
+
+app.use('/api/v1', authLimiter, authenticateToken, apiRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

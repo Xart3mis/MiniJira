@@ -43,7 +43,7 @@ async function recordStatusChange(task, user, newStatus) {
     return;
   }
 
-  const now = new Date().toISOString();
+  const now = `${new Date().toISOString()}#${uuidv4()}`;
   const logEntry = {
     taskId: task.taskId,
     timestamp: now,

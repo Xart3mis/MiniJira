@@ -1,10 +1,19 @@
-import AWS from 'aws-sdk';
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import {
+  DeleteCommand,
+  DynamoDBDocumentClient,
+  GetCommand,
+  PutCommand,
+  QueryCommand,
+  ScanCommand,
+  UpdateCommand
+} from '@aws-sdk/lib-dynamodb';
 
-AWS.config.update({
+const dynamodbClient = new DynamoDBClient({
   region: process.env.AWS_REGION || 'us-east-1'
 });
 
-const docClient = new AWS.DynamoDB.DocumentClient();
+const docClient = DynamoDBDocumentClient.from(dynamodbClient);
 
 // Table names from environment
 export const TABLES = {
@@ -25,11 +34,11 @@ export const INDEXES = {
 // Helper functions for common DynamoDB operations
 export async function getItem(tableName, key) {
   try {
-    const params = {
+    const command = new GetCommand({
       TableName: tableName,
       Key: key
-    };
-    const result = await docClient.get(params).promise();
+    });
+    const result = await docClient.send(command);
     return result.Item || null;
   } catch (error) {
     console.error(`Error getting item from ${tableName}:`, error);
@@ -39,11 +48,11 @@ export async function getItem(tableName, key) {
 
 export async function putItem(tableName, item) {
   try {
-    const params = {
+    const command = new PutCommand({
       TableName: tableName,
       Item: item
-    };
-    await docClient.put(params).promise();
+    });
+    await docClient.send(command);
     return item;
   } catch (error) {
     console.error(`Error putting item to ${tableName}:`, error);
@@ -71,16 +80,16 @@ export async function updateItem(tableName, key, updates) {
     ExpressionAttributeNames['#updatedAt'] = 'updatedAt';
     ExpressionAttributeValues[':now'] = new Date().toISOString();
 
-    const params = {
+    const command = new UpdateCommand({
       TableName: tableName,
       Key: key,
       UpdateExpression,
       ExpressionAttributeNames,
       ExpressionAttributeValues,
       ReturnValues: 'ALL_NEW'
-    };
+    });
 
-    const result = await docClient.update(params).promise();
+    const result = await docClient.send(command);
     return result.Attributes;
   } catch (error) {
     console.error(`Error updating item in ${tableName}:`, error);
@@ -90,11 +99,11 @@ export async function updateItem(tableName, key, updates) {
 
 export async function deleteItem(tableName, key) {
   try {
-    const params = {
+    const command = new DeleteCommand({
       TableName: tableName,
       Key: key
-    };
-    await docClient.delete(params).promise();
+    });
+    await docClient.send(command);
   } catch (error) {
     console.error(`Error deleting item from ${tableName}:`, error);
     throw error;
@@ -103,10 +112,11 @@ export async function deleteItem(tableName, key) {
 
 export async function query(tableName, params) {
   try {
-    const result = await docClient.query({
+    const command = new QueryCommand({
       TableName: tableName,
       ...params
-    }).promise();
+    });
+    const result = await docClient.send(command);
     return {
       items: result.Items || [],
       count: result.Count || 0,
@@ -120,10 +130,11 @@ export async function query(tableName, params) {
 
 export async function scan(tableName, params = {}) {
   try {
-    const result = await docClient.scan({
+    const command = new ScanCommand({
       TableName: tableName,
       ...params
-    }).promise();
+    });
+    const result = await docClient.send(command);
     return {
       items: result.Items || [],
       count: result.Count || 0,
