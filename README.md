@@ -67,7 +67,7 @@ MiniJira/
 | **Person 2** | Frontend Features | Task modal, Comments, File upload UI |
 | **Person 3** | Backend API | User/Team/Task routes, DynamoDB models, Cognito integration |
 | **Person 4** | Backend Services | S3 upload handling, SNS/SQS setup, Lambda integration |
-| **Person 5** (You) | DevOps + Integration | EC2/ALB/CloudFront setup, Terraform IaC, CI/CD, final deployment |
+| **Person 5** | DevOps + Integration | EC2/ALB/CloudFront setup, Terraform IaC, CI/CD, final deployment |
 
 ## Key Files
 
