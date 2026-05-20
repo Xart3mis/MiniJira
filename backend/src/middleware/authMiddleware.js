@@ -36,6 +36,14 @@ function getPublicKey(kid, keys) {
 }
 
 export async function authenticateToken(req, res, next) {
+  if (!COGNITO_USER_POOL_ID || !COGNITO_CLIENT_ID) {
+    return res.status(500).json({
+      success: false,
+      error: 'ServerError',
+      message: 'Cognito configuration missing'
+    });
+  }
+
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1]; // "Bearer token"
 
@@ -71,13 +79,11 @@ export async function authenticateToken(req, res, next) {
       issuer: `https://cognito-idp.${COGNITO_REGION}.amazonaws.com/${COGNITO_USER_POOL_ID}`
     });
 
-    if (COGNITO_CLIENT_ID) {
-      if (verified.token_use === 'access' && verified.client_id !== COGNITO_CLIENT_ID) {
-        throw new Error('Invalid access token audience');
-      }
-      if (verified.token_use === 'id' && verified.aud !== COGNITO_CLIENT_ID) {
-        throw new Error('Invalid id token audience');
-      }
+    if (verified.token_use === 'access' && verified.client_id !== COGNITO_CLIENT_ID) {
+      throw new Error('Invalid access token audience');
+    }
+    if (verified.token_use === 'id' && verified.aud !== COGNITO_CLIENT_ID) {
+      throw new Error('Invalid id token audience');
     }
 
     // Attach user info to request
@@ -143,6 +149,13 @@ export function requireTeamAccess(teamIdParam = 'teamId') {
 
     // Employees can only access their own team
     const requestedTeamId = req.params[teamIdParam] || req.body.teamId;
+    if (!requestedTeamId) {
+      return res.status(400).json({
+        success: false,
+        error: 'BadRequest',
+        message: 'Team ID is required'
+      });
+    }
     if (req.user.teamId !== requestedTeamId) {
       return res.status(403).json({
         success: false,
