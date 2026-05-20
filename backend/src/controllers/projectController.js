@@ -9,6 +9,7 @@ import {
 
 const PROJECTS_TABLE = process.env.DYNAMODB_PROJECTS_TABLE;
 const TEAMS_TABLE = process.env.DYNAMODB_TEAMS_TABLE;
+const TASKS_TABLE = process.env.DYNAMODB_TASKS_TABLE;
 
 export async function createProject(req, res, next) {
     try {
@@ -178,6 +179,28 @@ export async function deleteProject(req, res, next) {
             return res.status(404).json({
                 success: false,
                 message: 'Project not found'
+            });
+        }
+
+        const tasks = await scanTable(TASKS_TABLE);
+
+        const projectTasks = tasks
+            .filter((task) => task.projectId === req.params.id)
+            .map((task) => ({
+                taskId: task.taskId,
+                title: task.title,
+                status: task.status,
+                priority: task.priority,
+                assigneeName: task.assigneeName
+            }));
+
+        if (projectTasks.length > 0) {
+            return res.status(409).json({
+                success: false,
+                message: 'Cannot delete project because tasks are still assigned to it.',
+                usedBy: {
+                    tasks: projectTasks
+                }
             });
         }
 

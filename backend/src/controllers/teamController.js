@@ -8,6 +8,9 @@ import {
 } from '../services/dynamoService.js';
 
 const TEAMS_TABLE = process.env.DYNAMODB_TEAMS_TABLE;
+const USERS_TABLE = process.env.DYNAMODB_USERS_TABLE;
+const PROJECTS_TABLE = process.env.DYNAMODB_PROJECTS_TABLE;
+const TASKS_TABLE = process.env.DYNAMODB_TASKS_TABLE;
 
 export async function createTeam(req, res, next) {
     try {
@@ -159,6 +162,48 @@ export async function deleteTeam(req, res, next) {
             return res.status(404).json({
                 success: false,
                 message: 'Team not found'
+            });
+        }
+
+        const users = await scanTable(USERS_TABLE);
+        const projects = await scanTable(PROJECTS_TABLE);
+        const tasks = await scanTable(TASKS_TABLE);
+
+        const teamUsers = users
+            .filter((user) => user.teamId === req.params.id)
+            .map((user) => ({
+                userId: user.userId,
+                name: user.name,
+                email: user.email,
+                role: user.role
+            }));
+
+        const teamProjects = projects
+            .filter((project) => project.teamId === req.params.id)
+            .map((project) => ({
+                projectId: project.projectId,
+                name: project.name,
+                status: project.status
+            }));
+
+        const teamTasks = tasks
+            .filter((task) => task.teamId === req.params.id)
+            .map((task) => ({
+                taskId: task.taskId,
+                title: task.title,
+                status: task.status,
+                assigneeName: task.assigneeName
+            }));
+
+        if (teamUsers.length > 0 || teamProjects.length > 0 || teamTasks.length > 0) {
+            return res.status(409).json({
+                success: false,
+                message: 'Cannot delete team because it is still used by users, projects, or tasks.',
+                usedBy: {
+                    users: teamUsers,
+                    projects: teamProjects,
+                    tasks: teamTasks
+                }
             });
         }
 

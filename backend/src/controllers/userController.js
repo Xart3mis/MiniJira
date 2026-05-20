@@ -9,6 +9,7 @@ import {
 
 const USERS_TABLE = process.env.DYNAMODB_USERS_TABLE;
 const TEAMS_TABLE = process.env.DYNAMODB_TEAMS_TABLE;
+const TASKS_TABLE = process.env.DYNAMODB_TASKS_TABLE;
 
 export async function createUser(req, res, next) {
     try {
@@ -263,6 +264,29 @@ export async function deleteUser(req, res, next) {
             return res.status(404).json({
                 success: false,
                 message: 'User not found'
+            });
+        }
+
+        const tasks = await scanTable(TASKS_TABLE);
+
+        const assignedTasks = tasks
+            .filter((task) => task.assigneeId === req.params.id)
+            .map((task) => ({
+                taskId: task.taskId,
+                title: task.title,
+                status: task.status,
+                priority: task.priority,
+                projectId: task.projectId,
+                teamId: task.teamId
+            }));
+
+        if (assignedTasks.length > 0) {
+            return res.status(409).json({
+                success: false,
+                message: 'Cannot delete user because tasks are still assigned to this user.',
+                usedBy: {
+                    tasks: assignedTasks
+                }
             });
         }
 

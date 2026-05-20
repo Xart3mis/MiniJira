@@ -348,13 +348,35 @@ export async function deleteTask(req, res, next) {
             });
         }
 
+        const comments = await scanTable(COMMENTS_TABLE);
+
+        const taskComments = comments.filter(
+            (comment) => comment.taskId === req.params.id
+        );
+
+        for (const comment of taskComments) {
+            await deleteItem(COMMENTS_TABLE, {
+                commentId: comment.commentId
+            });
+        }
+
         await deleteItem(TASKS_TABLE, {
             taskId: req.params.id
         });
 
         res.json({
             success: true,
-            message: 'Task deleted successfully'
+            message: 'Task and related comments deleted successfully',
+            deleted: {
+                taskId: req.params.id,
+                commentsCount: taskComments.length,
+                comments: taskComments.map((comment) => ({
+                    commentId: comment.commentId,
+                    text: comment.text,
+                    userName: comment.userName,
+                    createdAt: comment.createdAt
+                }))
+            }
         });
     } catch (error) {
         next(error);
