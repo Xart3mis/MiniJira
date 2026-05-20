@@ -3,6 +3,8 @@ import cors from 'cors';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 
+import { validateEnv } from './config/env.js';
+
 import taskRoutes from './routes/taskRoutes.js';
 import projectRoutes from './routes/projectRoutes.js';
 import commentRoutes from './routes/commentRoutes.js';
@@ -10,6 +12,7 @@ import teamRoutes from './routes/teamRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 
 dotenv.config();
+validateEnv();
 
 const app = express();
 const PORT = process.env.BACKEND_PORT || 5000;
@@ -50,9 +53,50 @@ app.use('/api/users', userRoutes);
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err);
+
+  if (err.code === 'ResourceNotFoundException') {
+    return res.status(500).json({
+      success: false,
+      error: 'DynamoDBResourceNotFound',
+      message: 'A required DynamoDB table or index was not found. Check table name, index name, and AWS region.'
+    });
+  }
+
+  if (err.code === 'UnrecognizedClientException') {
+    return res.status(500).json({
+      success: false,
+      error: 'AWSCredentialsError',
+      message: 'AWS credentials are invalid or expired. Check your AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY.'
+    });
+  }
+
+  if (err.code === 'AccessDeniedException') {
+    return res.status(403).json({
+      success: false,
+      error: 'AWSAccessDenied',
+      message: 'AWS user does not have permission for this action.'
+    });
+  }
+
+  if (err.code === 'ValidationException') {
+    return res.status(400).json({
+      success: false,
+      error: 'DynamoDBValidationException',
+      message: err.message
+    });
+  }
+
+  if (err.code === 'ConditionalCheckFailedException') {
+    return res.status(409).json({
+      success: false,
+      error: 'ConditionalCheckFailed',
+      message: 'The requested operation could not be completed because a condition failed.'
+    });
+  }
+
   res.status(err.status || 500).json({
     success: false,
-    error: err.name || 'ServerError',
+    error: err.name || err.code || 'ServerError',
     message: err.message || 'Internal server error'
   });
 });

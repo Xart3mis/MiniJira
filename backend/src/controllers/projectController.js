@@ -8,6 +8,7 @@ import {
 } from '../services/dynamoService.js';
 
 const PROJECTS_TABLE = process.env.DYNAMODB_PROJECTS_TABLE;
+const TEAMS_TABLE = process.env.DYNAMODB_TEAMS_TABLE;
 
 export async function createProject(req, res, next) {
     try {
@@ -29,6 +30,14 @@ export async function createProject(req, res, next) {
             });
         }
 
+        const team = await getItem(TEAMS_TABLE, { teamId });
+
+        if (!team) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid teamId. Team does not exist.'
+            });
+        }
         const now = new Date().toISOString();
 
         const project = {

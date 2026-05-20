@@ -9,7 +9,46 @@ import {
 } from '../services/dynamoService.js';
 
 const TASKS_TABLE = process.env.DYNAMODB_TASKS_TABLE;
-console.log('TASKS_TABLE from env:', TASKS_TABLE);
+const USERS_TABLE = process.env.DYNAMODB_USERS_TABLE;
+const TEAMS_TABLE = process.env.DYNAMODB_TEAMS_TABLE;
+const PROJECTS_TABLE = process.env.DYNAMODB_PROJECTS_TABLE;
+
+async function validateTaskRelations({ teamId, projectId, assigneeId }) {
+    const team = await getItem(TEAMS_TABLE, { teamId });
+
+    if (!team) {
+        return 'Invalid teamId. Team does not exist.';
+    }
+
+    const project = await getItem(PROJECTS_TABLE, { projectId });
+
+    if (!project) {
+        return 'Invalid projectId. Project does not exist.';
+    }
+
+    const assignee = await getItem(USERS_TABLE, { userId: assigneeId });
+
+    if (!assignee) {
+        return 'Invalid assigneeId. User does not exist.';
+    }
+
+    if (assignee.role !== 'Employee') {
+        return 'Task assignee must be an Employee.';
+    }
+
+    if (assignee.teamId !== teamId) {
+        return 'Assignee does not belong to the selected team.';
+    }
+
+    if (project.teamId !== teamId) {
+        return 'Project does not belong to the selected team.';
+    }
+
+    return null;
+}
+
+const ALLOWED_PRIORITIES = ['Low', 'Medium', 'High', 'Critical'];
+const ALLOWED_STATUSES = ['To Do', 'In Progress', 'Done', 'Blocked'];
 
 export async function createTask(req, res, next) {
     try {
@@ -26,10 +65,30 @@ export async function createTask(req, res, next) {
             imageUrl
         } = req.body;
 
-        if (!title || !description || !priority || !deadline || !assigneeId || !teamId) {
+        if (!title || !description || !priority || !deadline || !assigneeId || !teamId || !projectId) {
             return res.status(400).json({
                 success: false,
                 message: 'Missing required task fields'
+            });
+        }
+
+        if (!ALLOWED_PRIORITIES.includes(priority)) {
+            return res.status(400).json({
+                success: false,
+                message: 'priority must be one of: Low, Medium, High, Critical'
+            });
+        }
+
+        const relationError = await validateTaskRelations({
+            teamId,
+            projectId,
+            assigneeId
+        });
+
+        if (relationError) {
+            return res.status(400).json({
+                success: false,
+                message: relationError
             });
         }
 
@@ -153,14 +212,7 @@ export async function updateTask(req, res, next) {
         }
 
         const role = req.user?.role || req.query.role;
-        const teamId = req.user?.teamId || req.query.teamId;
-
-        if (role !== 'Manager' && role !== 'Admin' && task.teamId !== teamId) {
-            return res.status(403).json({
-                success: false,
-                message: 'You cannot update this task'
-            });
-        }
+        const requesterTeamId = req.user?.teamId || req.query.teamId;
 
         const {
             title,
@@ -171,16 +223,57 @@ export async function updateTask(req, res, next) {
             assigneeId,
             assigneeEmail,
             assigneeName,
-            teamId: newTeamId,
+            teamId,
+            projectId,
             imageUrl
         } = req.body;
+
+        const finalTeamId = teamId ?? task.teamId;
+        const finalProjectId = projectId ?? task.projectId;
+        const finalAssigneeId = assigneeId ?? task.assigneeId;
+        const finalPriority = priority ?? task.priority;
+        const finalStatus = status ?? task.status;
+
+        if (role !== 'Manager' && role !== 'Admin' && task.teamId !== requesterTeamId) {
+            return res.status(403).json({
+                success: false,
+                message: 'You cannot update this task'
+            });
+        }
+
+        if (!ALLOWED_PRIORITIES.includes(finalPriority)) {
+            return res.status(400).json({
+                success: false,
+                message: 'priority must be one of: Low, Medium, High, Critical'
+            });
+        }
+
+        if (!ALLOWED_STATUSES.includes(finalStatus)) {
+            return res.status(400).json({
+                success: false,
+                message: 'status must be one of: To Do, In Progress, Done, Blocked'
+            });
+        }
+
+        const relationError = await validateTaskRelations({
+            teamId: finalTeamId,
+            projectId: finalProjectId,
+            assigneeId: finalAssigneeId
+        });
+
+        if (relationError) {
+            return res.status(400).json({
+                success: false,
+                message: relationError
+            });
+        }
 
         const now = new Date().toISOString();
         const auditLog = task.auditLog || [];
 
-        if (status && status !== task.status) {
+        if (finalStatus && finalStatus !== task.status) {
             auditLog.push({
-                action: `Status changed from ${task.status} to ${status}`,
+                action: `Status changed from ${task.status} to ${finalStatus}`,
                 by: req.user?.userId || 'demo-user',
                 at: now
             });
@@ -190,28 +283,30 @@ export async function updateTask(req, res, next) {
             TASKS_TABLE,
             { taskId: req.params.id },
             `SET 
-        title = :title,
-        description = :description,
-        #status = :status,
-        priority = :priority,
-        deadline = :deadline,
-        assigneeId = :assigneeId,
-        assigneeEmail = :assigneeEmail,
-        assigneeName = :assigneeName,
-        teamId = :teamId,
-        imageUrl = :imageUrl,
-        updatedAt = :updatedAt,
-        auditLog = :auditLog`,
+                title = :title,
+                description = :description,
+                #status = :status,
+                priority = :priority,
+                deadline = :deadline,
+                assigneeId = :assigneeId,
+                assigneeEmail = :assigneeEmail,
+                assigneeName = :assigneeName,
+                teamId = :teamId,
+                projectId = :projectId,
+                imageUrl = :imageUrl,
+                updatedAt = :updatedAt,
+                auditLog = :auditLog`,
             {
                 ':title': title ?? task.title,
                 ':description': description ?? task.description,
-                ':status': status ?? task.status,
-                ':priority': priority ?? task.priority,
+                ':status': finalStatus,
+                ':priority': finalPriority,
                 ':deadline': deadline ?? task.deadline,
-                ':assigneeId': assigneeId ?? task.assigneeId,
+                ':assigneeId': finalAssigneeId,
                 ':assigneeEmail': assigneeEmail ?? task.assigneeEmail,
                 ':assigneeName': assigneeName ?? task.assigneeName,
-                ':teamId': newTeamId ?? task.teamId,
+                ':teamId': finalTeamId,
+                ':projectId': finalProjectId,
                 ':imageUrl': imageUrl ?? task.imageUrl,
                 ':updatedAt': now,
                 ':auditLog': auditLog

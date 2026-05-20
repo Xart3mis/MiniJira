@@ -8,6 +8,7 @@ import {
 } from '../services/dynamoService.js';
 
 const COMMENTS_TABLE = process.env.DYNAMODB_COMMENTS_TABLE;
+const TASKS_TABLE = process.env.DYNAMODB_TASKS_TABLE;
 
 export async function createComment(req, res, next) {
     try {
@@ -23,6 +24,17 @@ export async function createComment(req, res, next) {
             return res.status(400).json({
                 success: false,
                 message: 'taskId and text are required'
+            });
+        }
+
+        const task = await getItem(TASKS_TABLE, {
+            taskId
+        });
+
+        if (!task) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid taskId. Task does not exist.'
             });
         }
 

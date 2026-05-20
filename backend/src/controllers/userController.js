@@ -55,6 +55,17 @@ export async function createUser(req, res, next) {
             }
         }
 
+        const users = await scanTable(USERS_TABLE);
+        const emailExists = users.some(
+            (user) => user.email.toLowerCase() === email.toLowerCase()
+        );
+
+        if (emailExists) {
+            return res.status(409).json({
+                success: false,
+                message: 'Email already exists'
+            });
+        }
         const now = new Date().toISOString();
 
         const user = {
