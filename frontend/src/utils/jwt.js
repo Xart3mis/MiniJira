@@ -1,4 +1,5 @@
 export function parseJwt(token) {
+  // Client-side decode for display only; backend must validate token signatures.
   if (!token) {
     return {};
   }
