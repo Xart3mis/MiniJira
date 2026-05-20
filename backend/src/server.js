@@ -3,6 +3,8 @@ import cors from 'cors';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 
+import taskRoutes from './routes/taskRoutes.js';
+
 dotenv.config();
 
 const app = express();
@@ -23,9 +25,19 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan('combined'));
 
 // Routes
+app.get('/', (req, res) => {
+  res.json({
+    message: 'Mini-Jira backend is running',
+    health: '/health',
+    tasks: '/api/tasks'
+  });
+});
+
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
+
+app.use('/api/tasks', taskRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
