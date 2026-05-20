@@ -95,9 +95,9 @@
 
 ---
 
-## Person 3: Backend API (Core Routes & Auth)
+## Person 3: Backend API (Core Routes & Activity Logging)
 
-**Focus:** Express setup, user/team/task/project routes, Cognito validation, DynamoDB models
+**Focus:** Express setup, user/team/task/project routes, DynamoDB models, activity logging
 
 ### Tasks
 
@@ -106,12 +106,6 @@
   - Health check endpoint (`GET /health`)
   - Error handling middleware
   - Environment variable validation
-
-- [ ] **Implement Cognito JWT validation**
-  - Middleware to verify JWT tokens
-  - Extract user claims (userId, role, teamId)
-  - Return 401 if token invalid/expired
-  - Return 403 if user not authorized
 
 - [ ] **Create DynamoDB helper functions**
   - getUser(userId)
@@ -148,20 +142,34 @@
   - `POST /tasks/:taskId/comments` → add comment
   - `GET /tasks/:taskId/comments` → get comments
 
+- [ ] **Set up DynamoDB activity log**
+  - Write entry when task status changes
+  - Fields: taskId, timestamp, userId, action, oldStatus, newStatus
+  - Integrate into PUT /tasks/:taskId update flow
+  - Scan activity log for audit trail + reporting
+
 ### Deliverables
 - Express server starts without errors
-- JWT validation working (test with Postman)
 - All CRUD endpoints respond with correct structure
 - Team isolation enforced on GET /tasks
+- Activity log writes entries on task status changes
 - Frontend can fetch tasks + teams via API
 
 ---
 
-## Person 4: Backend Services (S3, SNS, Lambda, Events)
+## Person 4: Backend Services (S3, SNS, Lambda, Events, Auth)
 
-**Focus:** S3 integration, image upload, SNS/SQS publishing, Lambda integration
+**Focus:** S3 integration, image upload, SNS/SQS publishing, Lambda integration, JWT validation
 
 ### Tasks
+
+- [ ] **Implement Cognito JWT validation**
+  - Middleware to verify JWT tokens from Cognito
+  - Extract user claims (userId, role, teamId) from token
+  - Return 401 if token invalid/expired
+  - Return 403 if user not authorized
+  - Cache public keys to avoid repeated API calls
+  - Integrate into Express as global middleware
 
 - [ ] **Implement S3 presigned URL generation**
   - `POST /tasks/:taskId/images` → return presigned upload URL
@@ -192,12 +200,8 @@
   - Metric: `TasksClosedDaily` (dimension: teamId)
   - From EC2 backend + Lambda functions
 
-- [ ] **Set up DynamoDB activity log**
-  - Write entry when status changes
-  - Fields: taskId, timestamp, userId, action, oldStatus, newStatus
-  - Scan activity log in dashboard/reports
-
 ### Deliverables
+- JWT validation middleware working (test with Postman)
 - Image upload presigned URL works
 - SNS topic publishes events
 - SQS queue receives messages
