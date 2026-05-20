@@ -210,7 +210,7 @@
 
 ---
 
-## Person 5: DevOps & Infrastructure (You)
+## Person 5: DevOps & Infrastructure
 
 **Focus:** EC2 setup, ALB, CloudFront, IaC, monitoring, final deployment
 

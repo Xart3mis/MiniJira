@@ -30,7 +30,7 @@ Backend:  http://localhost:5000
 | **Person 2** | Frontend Features | Kanban board + Task modal |
 | **Person 3** | Backend API | Express routes + Auth |
 | **Person 4** | Backend Services | S3 upload + SNS/Lambda |
-| **You** | DevOps | EC2 + ALB + CloudFront + Deployment |
+| **Person 5** | DevOps | EC2 + ALB + CloudFront + Deployment |
 
 👉 See **TEAM_TASKS.md** for detailed task breakdown
 
@@ -203,7 +203,7 @@ git push origin feature/kanban-board
 
 ---
 
-## AWS Deployment Commands (You)
+## AWS Deployment Commands
 
 ```bash
 # Launch 2 EC2 instances across AZs
