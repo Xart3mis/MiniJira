@@ -12,11 +12,12 @@ const COMMENTS_TABLE = process.env.DYNAMODB_COMMENTS_TABLE;
 export async function createComment(req, res, next) {
     try {
         const {
-            taskId,
             userId,
             userName,
             text
         } = req.body;
+
+        const taskId = req.params.taskId || req.body.taskId;
 
         if (!taskId || !text) {
             return res.status(400).json({
