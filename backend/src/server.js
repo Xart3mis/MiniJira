@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 
 import taskRoutes from './routes/taskRoutes.js';
 import projectRoutes from './routes/projectRoutes.js';
+import commentRoutes from './routes/commentRoutes.js';
 
 dotenv.config();
 
@@ -40,6 +41,7 @@ app.get('/health', (req, res) => {
 
 app.use('/api/tasks', taskRoutes);
 app.use('/api/projects', projectRoutes);
+app.use('/api/comments', commentRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
