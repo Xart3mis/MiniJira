@@ -141,6 +141,13 @@ export function requireTeamAccess(teamIdParam = 'teamId') {
       });
     }
 
+    // Managers can access any team
+    if (isManagerRole(req.user.role)) {
+      next();
+      return;
+    }
+
+    // Employees can only access their own team
     const requestedTeamId = req.params[teamIdParam] || req.body.teamId;
     if (!requestedTeamId) {
       return res.status(400).json({
@@ -149,14 +156,6 @@ export function requireTeamAccess(teamIdParam = 'teamId') {
         message: 'Team ID is required'
       });
     }
-
-    // Managers can access any team
-    if (isManagerRole(req.user.role)) {
-      next();
-      return;
-    }
-
-    // Employees can only access their own team
     if (req.user.teamId !== requestedTeamId) {
       return res.status(403).json({
         success: false,

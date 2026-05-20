@@ -179,6 +179,7 @@ router.put('/:taskId', asyncHandler(async (req, res) => {
     });
   }
 
+  let updates = {};
   if (!isManagerRole(req.user.role)) {
     if (task.teamId !== req.user.teamId) {
       return res.status(403).json({
@@ -196,21 +197,24 @@ router.put('/:taskId', asyncHandler(async (req, res) => {
       });
     }
 
-    if (Object.keys(req.body).some((field) => field !== 'status')) {
-      return res.status(403).json({
+    if (req.body.status === undefined) {
+      return res.status(400).json({
         success: false,
-        error: 'Forbidden',
-        message: 'Employees can only update task status'
+        error: 'BadRequest',
+        message: 'Status is required'
       });
     }
+
+    updates = { status: req.body.status };
   }
 
-  const updates = {};
-  TASK_FIELDS.forEach((field) => {
-    if (req.body[field] !== undefined) {
-      updates[field] = req.body[field];
-    }
-  });
+  if (isManagerRole(req.user.role)) {
+    TASK_FIELDS.forEach((field) => {
+      if (req.body[field] !== undefined) {
+        updates[field] = req.body[field];
+      }
+    });
+  }
 
   if (Object.keys(updates).length === 0) {
     return res.status(400).json({
