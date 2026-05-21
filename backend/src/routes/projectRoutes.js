@@ -1,5 +1,6 @@
 import express from 'express';
 
+import { authenticateToken } from '../middleware/authMiddleware.js';
 import {
     createProject,
     getProjects,
@@ -9,6 +10,7 @@ import {
 } from '../controllers/projectController.js';
 
 const router = express.Router();
+router.use(authenticateToken);
 
 router.post('/', createProject);
 router.get('/', getProjects);

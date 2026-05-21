@@ -1,5 +1,6 @@
 import express from 'express';
 
+import { authenticateToken } from '../middleware/authMiddleware.js';
 import {
     createTask,
     getTasks,
@@ -14,6 +15,7 @@ import {
 } from '../controllers/commentController.js';
 
 const router = express.Router();
+router.use(authenticateToken);
 
 router.post('/', createTask);
 router.get('/', getTasks);
