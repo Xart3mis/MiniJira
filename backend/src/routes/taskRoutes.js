@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { authenticateToken } from '../middleware/authMiddleware.js';
+import { authenticateToken, requireRole } from '../middleware/authMiddleware.js';
 import {
     createTask,
     getTasks,
@@ -17,12 +17,12 @@ import {
 const router = express.Router();
 router.use(authenticateToken);
 
-router.post('/', createTask);
+router.post('/', requireRole('Manager'), createTask);
 router.get('/', getTasks);
 router.post('/:taskId/comments', createComment);
 router.get('/:taskId/comments', getCommentsByTask);
 router.get('/:id', getTaskById);
 router.put('/:id', updateTask);
-router.delete('/:id', deleteTask);
+router.delete('/:id', requireRole('Manager'), deleteTask);
 
 export default router;
