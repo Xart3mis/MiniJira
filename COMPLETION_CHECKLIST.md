@@ -1,7 +1,7 @@
 # Mini-Jira Project Completion Checklist
 
 > **Deadline:** May 22, 2026 at 11:59 PM  
-> **Last audited:** May 21, 2026  
+> **Last audited:** May 21, 2026 (updated after backend sprint)  
 > Status legend: ✅ Done · ⚠️ Partial/Broken · ❌ Not started
 
 ---
@@ -13,16 +13,16 @@
 - ✅ Health check endpoint (`GET /health`)
 - ✅ Global error handling middleware (DynamoDB errors, 404 catch-all)
 - ✅ Environment variable validation on startup (`validateEnv`)
-- ❌ **`authenticateToken` middleware NOT applied to any routes** — all endpoints are fully unprotected. Must add `app.use(authenticateToken)` before route registration (or per-router) in `server.js`
-- ⚠️ `node-fetch` used in `authMiddleware.js` but not listed in `package.json` — will crash on startup
+- ✅ `authenticateToken` middleware applied to all 5 route files (tasks, projects, teams, users, comments)
+- ✅ `node-fetch` dependency removed; replaced with `jwk-to-pem` (native HTTPS used for JWKS fetch)
 
 ### 1.2 Authentication Middleware (`authMiddleware.js`)
 - ✅ `authenticateToken`: fetches Cognito JWKS, decodes JWT, attaches `req.user` (userId, email, name, role, teamId)
 - ✅ Public key caching (1-hour TTL to avoid repeated JWKS fetches)
 - ✅ `requireRole(...roles)` middleware — 403 if role not allowed
 - ✅ `requireTeamAccess(teamIdParam)` middleware — 403 if employee accesses wrong team
-- ⚠️ **`jwkToPem()` is a stub** — returns the raw JWK object instead of a PEM string. `jwt.verify()` will fail in production. Must install and use the `jwk-to-pem` npm package
-- ❌ `jwk-to-pem` not in `package.json` — must `npm install jwk-to-pem`
+- ✅ `jwkToPem()` fixed — now uses the real `jwk-to-pem` package, returns proper PEM string
+- ✅ `jwk-to-pem` installed and in `package.json`
 
 ### 1.3 DynamoDB Service (`dynamoService.js`)
 - ✅ `putItem`, `getItem`, `deleteItem`, `scanTable`
@@ -36,7 +36,7 @@
 - ✅ `POST /api/users` — create user
 - ✅ `PUT /api/users/:id` — update user
 - ✅ `DELETE /api/users/:id` — delete user (with validation)
-- ❌ Auth middleware not applied to these routes
+- ✅ Auth middleware applied
 
 ### 1.5 Teams API
 - ✅ `GET /api/teams` — list teams
@@ -44,7 +44,7 @@
 - ✅ `POST /api/teams` — create team
 - ✅ `PUT /api/teams/:id` — update team
 - ✅ `DELETE /api/teams/:id` — delete team (with cascade safety check)
-- ❌ Auth middleware not applied; no manager-only enforcement on POST/DELETE
+- ✅ Auth middleware applied; ⚠️ manager-only enforcement on POST/DELETE still uses `requireRole` calls in controller — not yet in middleware layer
 
 ### 1.6 Projects API
 - ✅ `GET /api/projects` — list projects
@@ -52,7 +52,7 @@
 - ✅ `POST /api/projects` — create project
 - ✅ `PUT /api/projects/:id` — update project
 - ✅ `DELETE /api/projects/:id` — delete project
-- ❌ Auth middleware not applied; no team-scoped filtering for employees
+- ✅ Auth middleware applied; ✅ employees query via `teamId-index` GSI; ✅ cross-team 403 on `getProjectById`
 
 ### 1.7 Tasks API
 - ✅ `GET /api/tasks` — list tasks (with `teamId` GSI query when role is Employee)
@@ -65,9 +65,9 @@
 - ⚠️ Spec defines statuses as `ToDo | InProgress | InReview | Done` — current code uses different values. Confirm which the team agreed on and align frontend + backend
 - ✅ Cross-entity validation (assignee belongs to team, project belongs to team)
 - ✅ Audit log embedded in task (`auditLog` array field updated on each change)
-- ❌ Auth middleware not applied to task routes
-- ❌ No dedicated `PUT /api/tasks/:id/assign` endpoint that publishes to SNS
-- ❌ No `POST /api/tasks/:id/images` endpoint for S3 presigned URL
+- ✅ Auth middleware applied to task routes
+- ✅ SNS published on task create and on reassign (inside `createTask` / `updateTask`)
+- ✅ `POST /api/upload/presigned` endpoint returns S3 presigned PUT URL for image upload
 
 ### 1.8 Comments API
 - ✅ `POST /api/tasks/:taskId/comments` — nested route under tasks
@@ -75,7 +75,7 @@
 - ✅ `PUT /api/comments/:id` — update comment
 - ✅ `DELETE /api/comments/:id` — delete comment
 - ✅ Validates `taskId` exists before creating comment
-- ❌ Auth middleware not applied; no team-scoped access check on comment creation
+- ✅ Auth middleware applied; ⚠️ team-scoped access check on comment creation not yet enforced
 
 ### 1.9 Activity Log (Separate DynamoDB Table)
 - ⚠️ Audit entries are stored in the task's own `auditLog` array field — **not** written to the separate `ActivityLog` DynamoDB table defined in the spec
@@ -88,11 +88,11 @@
 ## 2. Backend — AWS Services
 
 ### 2.1 SNS / Task Assignment Notifications
-- ❌ No SNS client configured in the backend
-- ❌ `POST /api/tasks/:id/assign` (or task update) does not publish to SNS topic
+- ✅ SNS client configured in backend (`aws.js` + `taskController.js`)
+- ✅ `createTask` and `updateTask` publish `TaskAssigned` event to SNS (non-fatal on error)
 - ❌ SNS topic (`minijira-task-assignment`) not verified as created in AWS console
 - ❌ SNS email subscription for assignee notification not set up
-- ❌ SNS → SQS subscription (fan-out) not configured
+- ❌ SNS → SQS subscription (fan-out) not configured in AWS console
 
 ### 2.2 SQS
 - ❌ No SQS consumer / polling logic in backend
@@ -100,10 +100,10 @@
 - ❌ Dead-letter queue not configured
 
 ### 2.3 S3 — Image Upload
-- ❌ No S3 client configured in the backend for presigned URLs
-- ❌ `POST /api/tasks/:taskId/images` endpoint not implemented
-- ❌ `imageUrl` is accepted as a plain string in task create/update — presigned upload flow is absent
-- ❌ S3 originals bucket and resized bucket not verified as created
+- ✅ S3 client configured in backend
+- ✅ `POST /api/upload/presigned` endpoint implemented — returns presigned PUT URL + resized `imageUrl`
+- ⚠️ `imageUrl` still accepted as plain string in task create/update (clients must store URL returned from presigned flow)
+- ❌ S3 originals bucket and resized bucket not verified as created in AWS console
 
 ### 2.4 CloudWatch Metrics
 - ❌ No CloudWatch client configured in the backend
@@ -117,22 +117,22 @@
 ## 3. Lambda Functions
 
 ### 3.1 `imageResize` Lambda
-- ❌ `backend/lambda/imageResize/` directory is empty — handler not written
-- ❌ S3 trigger (PUT on originals bucket) not configured
-- ❌ `sharp` library not installed / layer not set up
-- ❌ Output not written to resized bucket
+- ✅ `backend/lambda/imageResize/index.js` handler written (SDK v3 + sharp)
+- ✅ Resizes to 1200×1200 (`resized/`) and 300×300 thumbnail (`thumbnails/`) in resized bucket
+- ❌ S3 trigger (PUT on originals bucket) not configured in AWS console
+- ❌ `sharp` layer not deployed to Lambda (must use Lambda layer or bundle with `npm install`)
 
 ### 3.2 `assignmentWorker` Lambda
-- ❌ `backend/lambda/assignmentWorker/` directory is empty — handler not written
-- ❌ SQS trigger not configured
-- ❌ No ActivityLog write to DynamoDB
-- ❌ No CloudWatch metric publish
+- ✅ `backend/lambda/assignmentWorker/index.js` handler written (SDK v3)
+- ✅ Parses SQS-wrapped SNS envelope; writes to `ActivityLog` table; publishes CloudWatch metric
+- ❌ SQS event source mapping not configured in AWS console
+- ❌ Lambda function not deployed
 
 ### 3.3 `dailyDigest` Lambda
-- ❌ `backend/lambda/dailyDigest/` directory is empty — handler not written
-- ❌ EventBridge scheduled rule (9 AM daily) not configured
-- ❌ No DynamoDB scan for tasks due today
-- ❌ No SNS publish to digest topic
+- ✅ `backend/lambda/dailyDigest/index.js` handler written (SDK v3)
+- ✅ Paginated scan for tasks `deadline <= today` and `status !== Done`; publishes to SNS digest topic
+- ❌ EventBridge scheduled rule (cron `0 9 * * ? *`) not configured in AWS console
+- ❌ Lambda function not deployed
 
 ---
 
@@ -260,8 +260,8 @@
 
 ## 6. Security & Correctness
 
-- ❌ **Critical: `authenticateToken` must be applied as middleware** before all `/api/*` routes in `server.js`
-- ❌ **Critical: `jwkToPem` stub must be replaced** — install `jwk-to-pem` and use it properly
+- ✅ **Fixed: `authenticateToken` applied** to all 5 route files
+- ✅ **Fixed: `jwkToPem` stub replaced** — `jwk-to-pem` installed and wired correctly
 - ❌ Manager-only routes (create team, create project, delete task) must use `requireRole('Manager')` middleware
 - ❌ Employee cross-team isolation must be enforced via `requireTeamAccess` on all resource routes, not just in controller logic
 - ⚠️ Temp testing fallback (`req.query.role`, `req.query.teamId`) must be removed before deployment
@@ -301,19 +301,19 @@
 
 | Priority | Item | Owner | Est. Time |
 |----------|------|-------|-----------|
-| 🔴 P0 | Apply `authenticateToken` to all routes in `server.js` | Person 3/4 | 15 min |
-| 🔴 P0 | Fix `jwkToPem` stub — install + use `jwk-to-pem` | Person 4 | 30 min |
-| 🔴 P0 | Add `node-fetch` to `package.json` (or use native fetch Node 18+) | Person 4 | 10 min |
+| ~~🔴 P0~~ | ~~Apply `authenticateToken` to all routes~~ | ✅ Done | — |
+| ~~🔴 P0~~ | ~~Fix `jwkToPem` stub — install + use `jwk-to-pem`~~ | ✅ Done | — |
+| ~~🔴 P0~~ | ~~Add `node-fetch` to `package.json`~~ | ✅ Done | — |
 | 🔴 P0 | Create all DynamoDB tables with correct GSIs in AWS console | Person 5 | 45 min |
 | 🔴 P0 | Create Cognito user pool + 5 test users | Person 5 | 30 min |
 | 🔴 P0 | Build frontend: Vite setup, routing, auth flow | Person 1 | 3 hrs |
 | 🔴 P0 | Build frontend: Dashboard + Kanban board | Person 2 | 3 hrs |
-| 🟠 P1 | Add SNS publish on task assignment | Person 4 | 1 hr |
-| 🟠 P1 | Implement `assignmentWorker` Lambda | Person 4 | 1 hr |
-| 🟠 P1 | Implement `imageResize` Lambda + S3 buckets | Person 4 | 1.5 hrs |
-| 🟠 P1 | Implement `dailyDigest` Lambda + EventBridge rule | Person 4 | 1 hr |
+| ~~🟠 P1~~ | ~~Add SNS publish on task assignment~~ | ✅ Done | — |
+| 🟠 P1 | Deploy `assignmentWorker` Lambda + SQS event source | Person 4 | 30 min |
+| 🟠 P1 | Deploy `imageResize` Lambda + S3 trigger + sharp layer | Person 4 | 45 min |
+| 🟠 P1 | Deploy `dailyDigest` Lambda + EventBridge rule | Person 4 | 30 min |
 | 🟠 P1 | EC2 Auto Scaling Group + ALB + deploy backend | Person 5 | 2 hrs |
-| 🟡 P2 | S3 presigned URL endpoint (`POST /tasks/:id/images`) | Person 3/4 | 45 min |
+| ~~🟡 P2~~ | ~~S3 presigned URL endpoint~~ | ✅ Done (`POST /api/upload/presigned`) | — |
 | 🟡 P2 | CloudFront distribution + frontend static hosting | Person 5 | 1 hr |
 | 🟡 P2 | CloudWatch dashboard + alarms | Person 5 | 30 min |
 | 🟡 P2 | Architecture diagram | Person 5 | 30 min |

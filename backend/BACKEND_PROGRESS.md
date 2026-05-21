@@ -44,17 +44,40 @@
 - User delete blocked if assigned to tasks
 - Task delete cascades and deletes related comments
 
-## Not Completed Yet
+### Authentication & Authorization
+- `authenticateToken` middleware applied to all routes (tasks, projects, teams, users, comments)
+- `jwkToPem` stub replaced with real `jwk-to-pem` package (JWT verification now works)
+- JWKS public key cached with 1-hour TTL
 
-### Authentication
-- Cognito JWT validation not added yet
-- Real role-based access still uses query params for testing
-- Team isolation still uses query params for testing
+### Team Isolation
+- Projects: employees query via `teamId-index` GSI; cross-team 403 enforced on `getProjectById`
+- Tasks: team isolation already present; consistent with auth token `teamId`
 
-## Temporary Testing Notes
+### SNS Notifications
+- `publishTaskAssignment()` fires on task create and on reassign (non-fatal — errors logged, not propagated)
+- Publishes `TaskAssigned` event to `SNS_TASK_ASSIGNMENT_TOPIC_ARN`
 
-Until Cognito is connected, role/team testing uses query parameters:
+### S3 Image Upload
+- `POST /api/upload/presigned` returns presigned PUT URL + `imageUrl` pointing to resized bucket
+- Upload key format: `originals/{uuid}.ext`
 
-- Manager: `?role=Manager`
-- Employee: `?role=Employee&teamId=TEAM_ID`
-- User self-check: `?role=Employee&requesterId=USER_ID`
+### Lambda Functions (code complete, not yet deployed)
+- `imageResize`: S3 trigger on `originals/`; resizes to 1200×1200 and 300×300 thumbnail via sharp
+- `assignmentWorker`: SQS/SNS trigger; writes ActivityLog to DynamoDB; publishes CloudWatch metric
+- `dailyDigest`: EventBridge trigger; scans tasks due today/overdue; publishes email via SNS
+
+## Still Needed
+
+### AWS Console Setup (no code changes required)
+- Create SNS topics + SQS queue + SNS→SQS subscription
+- Create S3 buckets + CORS policy + S3→Lambda trigger
+- Deploy all 3 Lambda functions with correct IAM roles
+- Configure SQS event source mapping for `assignmentWorker`
+- Configure EventBridge rule (cron `0 9 * * ? *`) for `dailyDigest`
+- Install sharp layer on `imageResize` Lambda
+
+### Backend Code Gaps
+- Manager-only middleware enforcement on team/project create + delete routes
+- Team-scoped access check on comment creation
+- Activity log writes to separate DynamoDB table on status change
+- `GET /api/tasks/:id/activity` endpoint
