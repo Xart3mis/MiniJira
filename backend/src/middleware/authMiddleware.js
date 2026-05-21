@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import fetch from 'node-fetch';
+import jwkToPem from 'jwk-to-pem';
 
 const COGNITO_REGION = process.env.COGNITO_REGION || 'us-east-1';
 const COGNITO_USER_POOL_ID = process.env.COGNITO_USER_POOL_ID;
@@ -83,19 +83,6 @@ export async function authenticateToken(req, res, next) {
       message: 'Invalid or expired token'
     });
   }
-}
-
-// Simple JWK to PEM converter
-function jwkToPem(jwk) {
-  // This is a simplified converter; in production use 'jwk-to-pem' library
-  if (jwk.kty !== 'RSA' || !jwk.n || !jwk.e) {
-    throw new Error('Invalid JWK format');
-  }
-
-  // For now, return a placeholder; in production, use proper conversion
-  // eslint-disable-next-line no-console
-  console.warn('Using simplified JWK conversion; use jwk-to-pem library in production');
-  return jwk;
 }
 
 // Role-based access control middleware
