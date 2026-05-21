@@ -1,0 +1,11 @@
+{
+  "name": "lambda-image-resize",
+  "version": "1.0.0",
+  "description": "Resizes images uploaded to the originals S3 bucket",
+  "type": "module",
+  "main": "index.js",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.600.0",
+    "sharp": "^0.33.4"
+  }
+}

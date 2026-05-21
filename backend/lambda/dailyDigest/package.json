@@ -1,0 +1,12 @@
+{
+  "name": "lambda-daily-digest",
+  "version": "1.0.0",
+  "description": "Sends daily task-due digest emails via SNS",
+  "type": "module",
+  "main": "index.js",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.600.0",
+    "@aws-sdk/client-sns": "^3.600.0",
+    "@aws-sdk/lib-dynamodb": "^3.600.0"
+  }
+}

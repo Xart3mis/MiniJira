@@ -155,7 +155,13 @@ Create the following tables:
    - Runtime: Node.js 18.x
    - Handler: `index.handler`
 
-2. Upload code (see `backend/lambda/imageResize/index.js`)
+2. Package and upload (from repo root on Windows):
+
+   ```powershell
+   npm run lambda:package:imageResize
+   ```
+
+   Upload `backend/lambda/imageResize/function.zip`. Handler code: `backend/lambda/imageResize/index.js`.
 
 3. Add S3 trigger
    - Bucket: `minijira-images-originals`
@@ -166,7 +172,7 @@ Create the following tables:
 
 5. Set environment variables
    ```
-   RESIZED_BUCKET=minijira-images-resized
+   S3_RESIZED_BUCKET=minijira-images-resized
    ```
 
 #### Lambda 2: Assignment Worker

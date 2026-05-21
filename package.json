@@ -7,7 +7,11 @@
     "dev": "concurrently \"npm --prefix backend run dev\" \"npm --prefix frontend run dev\"",
     "install-all": "npm install && npm --prefix backend install && npm --prefix frontend install",
     "build": "npm --prefix backend run lint && npm --prefix frontend run build",
-    "start": "npm --prefix backend start"
+    "start": "npm --prefix backend start",
+    "lambda:package:imageResize": "powershell -NoProfile -ExecutionPolicy Bypass -File backend/lambda/imageResize/package.ps1",
+    "lambda:package:assignmentWorker": "powershell -NoProfile -ExecutionPolicy Bypass -File backend/lambda/assignmentWorker/package.ps1",
+    "lambda:package:dailyDigest": "powershell -NoProfile -ExecutionPolicy Bypass -File backend/lambda/dailyDigest/package.ps1",
+    "fix-npm": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/fix-npm.ps1"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
