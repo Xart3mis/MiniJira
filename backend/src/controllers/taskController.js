@@ -14,6 +14,7 @@ const USERS_TABLE = process.env.DYNAMODB_USERS_TABLE;
 const TEAMS_TABLE = process.env.DYNAMODB_TEAMS_TABLE;
 const PROJECTS_TABLE = process.env.DYNAMODB_PROJECTS_TABLE;
 const COMMENTS_TABLE = process.env.DYNAMODB_COMMENTS_TABLE;
+const ACTIVITY_TABLE = process.env.DYNAMODB_ACTIVITY_LOG_TABLE;
 
 async function validateTaskRelations({ teamId, projectId, assigneeId }) {
     const team = await getItem(TEAMS_TABLE, { teamId });
@@ -81,6 +82,21 @@ async function publishTaskAssignment(task) {
         }).promise();
     } catch (err) {
         console.error('SNS publish failed (non-fatal):', err.message);
+    }
+}
+
+async function writeActivityLog({ taskId, userId, action, oldStatus, newStatus }) {
+    try {
+        await putItem(ACTIVITY_TABLE, {
+            taskId,
+            timestamp: new Date().toISOString(),
+            userId,
+            action,
+            oldStatus: oldStatus || null,
+            newStatus: newStatus || null
+        });
+    } catch (err) {
+        console.error('ActivityLog write failed (non-fatal):', err.message);
     }
 }
 
@@ -319,6 +335,13 @@ export async function updateTask(req, res, next) {
                 action: `Status changed from ${task.status} to ${finalStatus}`,
                 by: req.user.userId,
                 at: now
+            });
+            await writeActivityLog({
+                taskId: req.params.id,
+                userId: req.user.userId,
+                action: 'StatusChanged',
+                oldStatus: task.status,
+                newStatus: finalStatus
             });
         }
 
