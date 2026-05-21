@@ -3,6 +3,7 @@ import {
     putItem,
     getItem,
     deleteItem,
+    scanTable,
     queryByIndex,
     updateItem
 } from '../services/dynamoService.js';
@@ -140,13 +141,13 @@ export async function createTask(req, res, next) {
             teamId,
             projectId: projectId || '',
             imageUrl: imageUrl || null,
-            createdBy: req.user?.userId || 'demo-manager',
+            createdBy: req.user.userId,
             createdAt: now,
             updatedAt: now,
             auditLog: [
                 {
                     action: 'Task Created',
-                    by: req.user?.userId || 'demo-manager',
+                    by: req.user.userId,
                     at: now
                 }
             ]
@@ -169,8 +170,8 @@ export async function getTasks(req, res, next) {
     try {
         let tasks;
 
-        const role = req.user?.role || req.query.role;
-        const teamId = req.user?.teamId || req.query.teamId;
+        const role = req.user.role;
+        const teamId = req.user.teamId;
 
         if (role === 'Manager' || role === 'Admin') {
             tasks = await scanTable(TASKS_TABLE);
@@ -213,8 +214,8 @@ export async function getTaskById(req, res, next) {
             });
         }
 
-        const role = req.user?.role || req.query.role;
-        const teamId = req.user?.teamId || req.query.teamId;
+        const role = req.user.role;
+        const teamId = req.user.teamId;
 
         if (role !== 'Manager' && role !== 'Admin' && task.teamId !== teamId) {
             return res.status(403).json({
@@ -245,8 +246,15 @@ export async function updateTask(req, res, next) {
             });
         }
 
-        const role = req.user?.role || req.query.role;
-        const requesterTeamId = req.user?.teamId || req.query.teamId;
+        const role = req.user.role;
+        const requesterTeamId = req.user.teamId;
+
+        if (role !== 'Manager' && role !== 'Admin' && task.teamId !== requesterTeamId) {
+            return res.status(403).json({
+                success: false,
+                message: 'You cannot update this task'
+            });
+        }
 
         const {
             title,
@@ -262,18 +270,19 @@ export async function updateTask(req, res, next) {
             imageUrl
         } = req.body;
 
-        const finalTeamId = teamId ?? task.teamId;
-        const finalProjectId = projectId ?? task.projectId;
-        const finalAssigneeId = assigneeId ?? task.assigneeId;
-        const finalPriority = priority ?? task.priority;
-        const finalStatus = status ?? task.status;
+        const isEmployee = role === 'Employee';
 
-        if (role !== 'Manager' && role !== 'Admin' && task.teamId !== requesterTeamId) {
-            return res.status(403).json({
-                success: false,
-                message: 'You cannot update this task'
-            });
-        }
+        const finalTitle = isEmployee ? task.title : (title ?? task.title);
+        const finalDescription = isEmployee ? task.description : (description ?? task.description);
+        const finalPriority = isEmployee ? task.priority : (priority ?? task.priority);
+        const finalDeadline = isEmployee ? task.deadline : (deadline ?? task.deadline);
+        const finalAssigneeId = isEmployee ? task.assigneeId : (assigneeId ?? task.assigneeId);
+        const finalAssigneeEmail = isEmployee ? task.assigneeEmail : (assigneeEmail ?? task.assigneeEmail);
+        const finalAssigneeName = isEmployee ? task.assigneeName : (assigneeName ?? task.assigneeName);
+        const finalTeamId = isEmployee ? task.teamId : (teamId ?? task.teamId);
+        const finalProjectId = isEmployee ? task.projectId : (projectId ?? task.projectId);
+        const finalImageUrl = isEmployee ? task.imageUrl : (imageUrl ?? task.imageUrl);
+        const finalStatus = status ?? task.status;
 
         if (!ALLOWED_PRIORITIES.includes(finalPriority)) {
             return res.status(400).json({
@@ -308,7 +317,7 @@ export async function updateTask(req, res, next) {
         if (finalStatus && finalStatus !== task.status) {
             auditLog.push({
                 action: `Status changed from ${task.status} to ${finalStatus}`,
-                by: req.user?.userId || 'demo-user',
+                by: req.user.userId,
                 at: now
             });
         }
@@ -331,17 +340,17 @@ export async function updateTask(req, res, next) {
                 updatedAt = :updatedAt,
                 auditLog = :auditLog`,
             {
-                ':title': title ?? task.title,
-                ':description': description ?? task.description,
+                ':title': finalTitle,
+                ':description': finalDescription,
                 ':status': finalStatus,
                 ':priority': finalPriority,
-                ':deadline': deadline ?? task.deadline,
+                ':deadline': finalDeadline,
                 ':assigneeId': finalAssigneeId,
-                ':assigneeEmail': assigneeEmail ?? task.assigneeEmail,
-                ':assigneeName': assigneeName ?? task.assigneeName,
+                ':assigneeEmail': finalAssigneeEmail,
+                ':assigneeName': finalAssigneeName,
                 ':teamId': finalTeamId,
                 ':projectId': finalProjectId,
-                ':imageUrl': imageUrl ?? task.imageUrl,
+                ':imageUrl': finalImageUrl,
                 ':updatedAt': now,
                 ':auditLog': auditLog
             },
@@ -374,15 +383,6 @@ export async function deleteTask(req, res, next) {
             return res.status(404).json({
                 success: false,
                 message: 'Task not found'
-            });
-        }
-
-        const role = req.user?.role || req.query.role;
-
-        if (role !== 'Manager' && role !== 'Admin') {
-            return res.status(403).json({
-                success: false,
-                message: 'Only managers can delete tasks'
             });
         }
 
