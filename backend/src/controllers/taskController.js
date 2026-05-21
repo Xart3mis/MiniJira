@@ -8,7 +8,7 @@ import {
     queryByPk,
     updateItem
 } from '../services/dynamoService.js';
-import { sns } from '../config/aws.js';
+import { sns, cloudwatch } from '../config/aws.js';
 
 const TASKS_TABLE = process.env.DYNAMODB_TASKS_TABLE;
 const USERS_TABLE = process.env.DYNAMODB_USERS_TABLE;
@@ -101,6 +101,23 @@ async function writeActivityLog({ taskId, userId, action, oldStatus, newStatus }
     }
 }
 
+async function publishMetric(metricName, value, dimensions = []) {
+    try {
+        await cloudwatch.putMetricData({
+            Namespace: 'MiniJira',
+            MetricData: [{
+                MetricName: metricName,
+                Value: value,
+                Unit: 'Count',
+                Timestamp: new Date(),
+                Dimensions: dimensions
+            }]
+        }).promise();
+    } catch (err) {
+        console.error(`CloudWatch metric ${metricName} failed (non-fatal):`, err.message);
+    }
+}
+
 export async function createTask(req, res, next) {
     try {
         const {
@@ -172,6 +189,10 @@ export async function createTask(req, res, next) {
 
         await putItem(TASKS_TABLE, task);
         await publishTaskAssignment(task);
+        await publishMetric('TasksCreatedDaily', 1);
+        await publishMetric('TasksAssignedPerTeam', 1, [
+            { Name: 'TeamId', Value: task.teamId }
+        ]);
 
         res.status(201).json({
             success: true,
@@ -344,6 +365,11 @@ export async function updateTask(req, res, next) {
                 oldStatus: task.status,
                 newStatus: finalStatus
             });
+            if (finalStatus === 'Done') {
+                await publishMetric('TasksClosedDaily', 1, [
+                    { Name: 'TeamId', Value: finalTeamId }
+                ]);
+            }
         }
 
         const updatedTask = await updateItem(
@@ -385,6 +411,9 @@ export async function updateTask(req, res, next) {
 
         if (finalAssigneeId !== task.assigneeId) {
             await publishTaskAssignment(updatedTask);
+            await publishMetric('TasksAssignedPerTeam', 1, [
+                { Name: 'TeamId', Value: finalTeamId }
+            ]);
         }
 
         res.json({
