@@ -3,7 +3,6 @@ import {
     putItem,
     getItem,
     deleteItem,
-    scanTable,
     queryByIndex,
     updateItem
 } from '../services/dynamoService.js';
@@ -13,6 +12,7 @@ const TASKS_TABLE = process.env.DYNAMODB_TASKS_TABLE;
 const USERS_TABLE = process.env.DYNAMODB_USERS_TABLE;
 const TEAMS_TABLE = process.env.DYNAMODB_TEAMS_TABLE;
 const PROJECTS_TABLE = process.env.DYNAMODB_PROJECTS_TABLE;
+const COMMENTS_TABLE = process.env.DYNAMODB_COMMENTS_TABLE;
 
 async function validateTaskRelations({ teamId, projectId, assigneeId }) {
     const team = await getItem(TEAMS_TABLE, { teamId });
@@ -386,10 +386,11 @@ export async function deleteTask(req, res, next) {
             });
         }
 
-        const comments = await scanTable(COMMENTS_TABLE);
-
-        const taskComments = comments.filter(
-            (comment) => comment.taskId === req.params.id
+        const taskComments = await queryByIndex(
+            COMMENTS_TABLE,
+            'taskId-index',
+            'taskId',
+            req.params.id
         );
 
         for (const comment of taskComments) {
