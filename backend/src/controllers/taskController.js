@@ -7,6 +7,7 @@ import {
     queryByIndex,
     updateItem
 } from '../services/dynamoService.js';
+import { sns } from '../config/aws.js';
 
 const TASKS_TABLE = process.env.DYNAMODB_TASKS_TABLE;
 const USERS_TABLE = process.env.DYNAMODB_USERS_TABLE;
@@ -49,6 +50,38 @@ async function validateTaskRelations({ teamId, projectId, assigneeId }) {
 
 const ALLOWED_PRIORITIES = ['Low', 'Medium', 'High', 'Critical'];
 const ALLOWED_STATUSES = ['To Do', 'In Progress', 'Done', 'Blocked'];
+
+async function publishTaskAssignment(task) {
+    const topicArn = process.env.SNS_TASK_ASSIGNMENT_TOPIC_ARN;
+    if (!topicArn) return;
+
+    try {
+        await sns.publish({
+            TopicArn: topicArn,
+            Subject: `Task Assigned: ${task.title}`,
+            Message: JSON.stringify({
+                eventType: 'TaskAssigned',
+                taskId: task.taskId,
+                title: task.title,
+                assigneeId: task.assigneeId,
+                assigneeEmail: task.assigneeEmail,
+                assigneeName: task.assigneeName,
+                teamId: task.teamId,
+                projectId: task.projectId,
+                deadline: task.deadline,
+                priority: task.priority
+            }),
+            MessageAttributes: {
+                eventType: {
+                    DataType: 'String',
+                    StringValue: 'TaskAssigned'
+                }
+            }
+        }).promise();
+    } catch (err) {
+        console.error('SNS publish failed (non-fatal):', err.message);
+    }
+}
 
 export async function createTask(req, res, next) {
     try {
@@ -120,6 +153,7 @@ export async function createTask(req, res, next) {
         };
 
         await putItem(TASKS_TABLE, task);
+        await publishTaskAssignment(task);
 
         res.status(201).json({
             success: true,
@@ -315,6 +349,10 @@ export async function updateTask(req, res, next) {
                 '#status': 'status'
             }
         );
+
+        if (finalAssigneeId !== task.assigneeId) {
+            await publishTaskAssignment(updatedTask);
+        }
 
         res.json({
             success: true,

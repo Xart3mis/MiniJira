@@ -4,6 +4,7 @@ import {
     getItem,
     deleteItem,
     scanTable,
+    queryByIndex,
     updateItem
 } from '../services/dynamoService.js';
 
@@ -69,7 +70,22 @@ export async function createProject(req, res, next) {
 
 export async function getProjects(req, res, next) {
     try {
-        const projects = await scanTable(PROJECTS_TABLE);
+        const role = req.user?.role;
+        const userTeamId = req.user?.teamId;
+
+        let projects;
+        if (role === 'Manager') {
+            projects = await scanTable(PROJECTS_TABLE);
+        } else {
+            if (!userTeamId) {
+                return res.status(403).json({
+                    success: false,
+                    error: 'Forbidden',
+                    message: 'No team assigned to this user'
+                });
+            }
+            projects = await queryByIndex(PROJECTS_TABLE, 'teamId-index', 'teamId', userTeamId);
+        }
 
         res.json({
             success: true,
@@ -91,6 +107,17 @@ export async function getProjectById(req, res, next) {
             return res.status(404).json({
                 success: false,
                 message: 'Project not found'
+            });
+        }
+
+        const role = req.user?.role;
+        const userTeamId = req.user?.teamId;
+
+        if (role !== 'Manager' && project.teamId !== userTeamId) {
+            return res.status(403).json({
+                success: false,
+                error: 'Forbidden',
+                message: 'You do not have access to this project'
             });
         }
 
