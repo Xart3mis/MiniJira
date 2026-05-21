@@ -5,6 +5,7 @@ import {
     deleteItem,
     scanTable,
     queryByIndex,
+    queryByPk,
     updateItem
 } from '../services/dynamoService.js';
 import { sns } from '../config/aws.js';
@@ -439,6 +440,37 @@ export async function deleteTask(req, res, next) {
                     createdAt: comment.createdAt
                 }))
             }
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+export async function getTaskActivity(req, res, next) {
+    try {
+        const task = await getItem(TASKS_TABLE, { taskId: req.params.id });
+
+        if (!task) {
+            return res.status(404).json({
+                success: false,
+                message: 'Task not found'
+            });
+        }
+
+        if (req.user.role === 'Employee' && req.user.teamId !== task.teamId) {
+            return res.status(403).json({
+                success: false,
+                error: 'Forbidden',
+                message: 'You cannot access this task'
+            });
+        }
+
+        const entries = await queryByPk(ACTIVITY_TABLE, 'taskId', req.params.id);
+
+        res.json({
+            success: true,
+            count: entries.length,
+            data: entries
         });
     } catch (error) {
         next(error);

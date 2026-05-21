@@ -6,7 +6,8 @@ import {
     getTasks,
     getTaskById,
     updateTask,
-    deleteTask
+    deleteTask,
+    getTaskActivity
 } from '../controllers/taskController.js';
 
 import {
@@ -21,6 +22,7 @@ router.post('/', requireRole('Manager'), createTask);
 router.get('/', getTasks);
 router.post('/:taskId/comments', createComment);
 router.get('/:taskId/comments', getCommentsByTask);
+router.get('/:id/activity', getTaskActivity);
 router.get('/:id', getTaskById);
 router.put('/:id', updateTask);
 router.delete('/:id', requireRole('Manager'), deleteTask);

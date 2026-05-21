@@ -54,6 +54,17 @@ export async function queryByIndex(tableName, indexName, keyName, keyValue) {
     return result.Items || [];
 }
 
+export async function queryByPk(tableName, pkName, pkValue) {
+    const params = {
+        TableName: tableName,
+        KeyConditionExpression: '#pk = :pkVal',
+        ExpressionAttributeNames: { '#pk': pkName },
+        ExpressionAttributeValues: { ':pkVal': pkValue }
+    };
+    const result = await dynamoDB.query(params).promise();
+    return result.Items || [];
+}
+
 export async function updateItem(tableName, key, updateExpression, expressionValues, expressionNames = {}) {
     const params = {
         TableName: tableName,
