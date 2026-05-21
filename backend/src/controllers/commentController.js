@@ -12,11 +12,7 @@ const TASKS_TABLE = process.env.DYNAMODB_TASKS_TABLE;
 
 export async function createComment(req, res, next) {
     try {
-        const {
-            userId,
-            userName,
-            text
-        } = req.body;
+        const { text } = req.body;
 
         const taskId = req.params.taskId || req.body.taskId;
 
@@ -38,13 +34,21 @@ export async function createComment(req, res, next) {
             });
         }
 
+        if (req.user.role === 'Employee' && req.user.teamId !== task.teamId) {
+            return res.status(403).json({
+                success: false,
+                error: 'Forbidden',
+                message: 'You do not belong to this team'
+            });
+        }
+
         const now = new Date().toISOString();
 
         const comment = {
             commentId: uuidv4(),
             taskId,
-            userId: userId || req.user?.userId || 'demo-user',
-            userName: userName || req.user?.name || 'Demo User',
+            userId: req.user.userId,
+            userName: req.user.name,
             text,
             createdAt: now,
             updatedAt: now
