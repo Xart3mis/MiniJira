@@ -6,7 +6,9 @@ import {
     getTeams,
     getTeamById,
     updateTeam,
-    deleteTeam
+    deleteTeam,
+    addMember,
+    removeMember
 } from '../controllers/teamController.js';
 
 const router = express.Router();
@@ -17,5 +19,8 @@ router.get('/', getTeams);
 router.get('/:id', getTeamById);
 router.put('/:id', requireRole('Manager'), updateTeam);
 router.delete('/:id', requireRole('Manager'), deleteTeam);
+
+router.post('/:id/members', requireRole('Manager'), addMember);
+router.delete('/:id/members/:userId', requireRole('Manager'), removeMember);
 
 export default router;

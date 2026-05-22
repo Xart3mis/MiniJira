@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { authenticateToken } from '../middleware/authMiddleware.js';
+import { authenticateToken, requireRole } from '../middleware/authMiddleware.js';
 import {
     createUser,
     getUsers,
@@ -13,11 +13,11 @@ import {
 const router = express.Router();
 router.use(authenticateToken);
 
-router.post('/', createUser);
+router.post('/', requireRole('Manager'), createUser);
 router.get('/', getUsers);
 router.get('/me', getMe);
 router.get('/:id', getUserById);
 router.put('/:id', updateUser);
-router.delete('/:id', deleteUser);
+router.delete('/:id', requireRole('Manager'), deleteUser);
 
 export default router;

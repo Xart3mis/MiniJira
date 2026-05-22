@@ -71,9 +71,12 @@ export async function updateItem(tableName, key, updateExpression, expressionVal
         Key: key,
         UpdateExpression: updateExpression,
         ExpressionAttributeValues: expressionValues,
-        ExpressionAttributeNames: expressionNames,
         ReturnValues: 'ALL_NEW'
     };
+
+    if (Object.keys(expressionNames).length > 0) {
+        params.ExpressionAttributeNames = expressionNames;
+    }
 
     const result = await dynamoDB.update(params).promise();
     return result.Attributes;

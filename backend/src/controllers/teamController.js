@@ -35,8 +35,8 @@ export async function createTeam(req, res, next) {
             teamId: uuidv4(),
             name,
             description: description || '',
-            managerId: managerId || req.user?.userId || 'demo-manager',
-            managerName: managerName || req.user?.name || 'Demo Manager',
+            managerId: managerId || req.user.userId,
+            managerName: managerName || req.user.name,
             members: members || [],
             createdAt: now,
             updatedAt: now
@@ -56,12 +56,11 @@ export async function createTeam(req, res, next) {
 
 export async function getTeams(req, res, next) {
     try {
-        const role = req.user?.role || req.query.role;
-        const teamId = req.user?.teamId || req.query.teamId;
+        const role = req.user.role;
+        const teamId = req.user.teamId;
 
         let teams = await scanTable(TEAMS_TABLE);
 
-        // Temporary filtering until Cognito auth is added
         if (role === 'Employee' && teamId) {
             teams = teams.filter((team) => team.teamId === teamId);
         }
@@ -146,6 +145,143 @@ export async function updateTeam(req, res, next) {
             success: true,
             message: 'Team updated successfully',
             data: updatedTeam
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+export async function addMember(req, res, next) {
+    try {
+        const team = await getItem(TEAMS_TABLE, { teamId: req.params.id });
+
+        if (!team) {
+            return res.status(404).json({
+                success: false,
+                message: 'Team not found'
+            });
+        }
+
+        const { userId } = req.body;
+
+        if (!userId) {
+            return res.status(400).json({
+                success: false,
+                message: 'userId is required'
+            });
+        }
+
+        const user = await getItem(USERS_TABLE, { userId });
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found'
+            });
+        }
+
+        if (user.role !== 'Employee') {
+            return res.status(400).json({
+                success: false,
+                message: 'Only Employee users can be added as team members'
+            });
+        }
+
+        const members = team.members || [];
+
+        if (members.includes(userId)) {
+            return res.status(409).json({
+                success: false,
+                message: 'User is already a member of this team'
+            });
+        }
+
+        if (user.teamId && user.teamId !== req.params.id) {
+            return res.status(409).json({
+                success: false,
+                message: `User already belongs to another team (${user.teamId}). Remove them first.`
+            });
+        }
+
+        const updatedMembers = [...members, userId];
+
+        await updateItem(
+            TEAMS_TABLE,
+            { teamId: req.params.id },
+            'SET members = :members, updatedAt = :updatedAt',
+            {
+                ':members': updatedMembers,
+                ':updatedAt': new Date().toISOString()
+            }
+        );
+
+        await updateItem(
+            USERS_TABLE,
+            { userId },
+            'SET teamId = :teamId, updatedAt = :updatedAt',
+            {
+                ':teamId': req.params.id,
+                ':updatedAt': new Date().toISOString()
+            }
+        );
+
+        res.json({
+            success: true,
+            message: 'Member added successfully',
+            data: { teamId: req.params.id, userId, members: updatedMembers }
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+export async function removeMember(req, res, next) {
+    try {
+        const team = await getItem(TEAMS_TABLE, { teamId: req.params.id });
+
+        if (!team) {
+            return res.status(404).json({
+                success: false,
+                message: 'Team not found'
+            });
+        }
+
+        const { userId } = req.params;
+        const members = team.members || [];
+
+        if (!members.includes(userId)) {
+            return res.status(404).json({
+                success: false,
+                message: 'User is not a member of this team'
+            });
+        }
+
+        const updatedMembers = members.filter((id) => id !== userId);
+
+        await updateItem(
+            TEAMS_TABLE,
+            { teamId: req.params.id },
+            'SET members = :members, updatedAt = :updatedAt',
+            {
+                ':members': updatedMembers,
+                ':updatedAt': new Date().toISOString()
+            }
+        );
+
+        await updateItem(
+            USERS_TABLE,
+            { userId },
+            'SET teamId = :teamId, updatedAt = :updatedAt',
+            {
+                ':teamId': '',
+                ':updatedAt': new Date().toISOString()
+            }
+        );
+
+        res.json({
+            success: true,
+            message: 'Member removed successfully',
+            data: { teamId: req.params.id, userId, members: updatedMembers }
         });
     } catch (error) {
         next(error);

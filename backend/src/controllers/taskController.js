@@ -52,7 +52,7 @@ async function validateTaskRelations({ teamId, projectId, assigneeId }) {
 }
 
 const ALLOWED_PRIORITIES = ['Low', 'Medium', 'High', 'Critical'];
-const ALLOWED_STATUSES = ['To Do', 'In Progress', 'Done', 'Blocked'];
+const ALLOWED_STATUSES = ['ToDo', 'InProgress', 'InReview', 'Done'];
 
 async function publishTaskAssignment(task) {
     const topicArn = process.env.SNS_TASK_ASSIGNMENT_TOPIC_ARN;
@@ -179,7 +179,7 @@ export async function createTask(req, res, next) {
             taskId: uuidv4(),
             title,
             description,
-            status: 'To Do',
+            status: 'ToDo',
             priority,
             deadline,
             assigneeId,
@@ -345,7 +345,7 @@ export async function updateTask(req, res, next) {
         if (!ALLOWED_STATUSES.includes(finalStatus)) {
             return res.status(400).json({
                 success: false,
-                message: 'status must be one of: To Do, In Progress, Done, Blocked'
+                message: 'status must be one of: ToDo, InProgress, InReview, Done'
             });
         }
 

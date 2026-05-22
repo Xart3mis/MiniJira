@@ -47,8 +47,8 @@ export async function createProject(req, res, next) {
             name,
             description,
             teamId,
-            managerId: managerId || req.user?.userId || 'demo-manager',
-            managerName: managerName || 'Demo Manager',
+            managerId: managerId || req.user.userId,
+            managerName: managerName || req.user.name,
             status: status || 'Active',
             startDate: startDate || now.split('T')[0],
             deadline: deadline || '',
@@ -70,8 +70,8 @@ export async function createProject(req, res, next) {
 
 export async function getProjects(req, res, next) {
     try {
-        const role = req.user?.role;
-        const userTeamId = req.user?.teamId;
+        const role = req.user.role;
+        const userTeamId = req.user.teamId;
 
         let projects;
         if (role === 'Manager') {
@@ -110,8 +110,8 @@ export async function getProjectById(req, res, next) {
             });
         }
 
-        const role = req.user?.role;
-        const userTeamId = req.user?.teamId;
+        const role = req.user.role;
+        const userTeamId = req.user.teamId;
 
         if (role !== 'Manager' && project.teamId !== userTeamId) {
             return res.status(403).json({

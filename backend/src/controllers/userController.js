@@ -14,6 +14,7 @@ const TASKS_TABLE = process.env.DYNAMODB_TASKS_TABLE;
 export async function createUser(req, res, next) {
     try {
         const {
+            userId: bodyUserId,
             name,
             email,
             role,
@@ -70,7 +71,7 @@ export async function createUser(req, res, next) {
         const now = new Date().toISOString();
 
         const user = {
-            userId: uuidv4(),
+            userId: bodyUserId || uuidv4(),
             name,
             email,
             role,
@@ -107,25 +108,23 @@ export async function getUsers(req, res, next) {
 
 export async function getMe(req, res, next) {
     try {
-        // Temporary until Cognito is connected
-        const userId = req.user?.userId || req.query.userId;
+        const userId = req.user.userId;
 
-        if (!userId) {
-            return res.status(400).json({
-                success: false,
-                message: 'userId is required until authentication is added'
-            });
-        }
-
-        const user = await getItem(USERS_TABLE, {
-            userId
-        });
+        let user = await getItem(USERS_TABLE, { userId });
 
         if (!user) {
-            return res.status(404).json({
-                success: false,
-                message: 'User not found'
-            });
+            // First login: bootstrap a DynamoDB profile from Cognito JWT claims
+            const now = new Date().toISOString();
+            user = {
+                userId,
+                email: req.user.email,
+                name: req.user.name,
+                role: req.user.role,
+                teamId: req.user.teamId || '',
+                createdAt: now,
+                updatedAt: now
+            };
+            await putItem(USERS_TABLE, user);
         }
 
         res.json({
@@ -150,9 +149,8 @@ export async function getUserById(req, res, next) {
             });
         }
 
-        // Temporary role check until Cognito is added
-        const requesterRole = req.user?.role || req.query.role;
-        const requesterId = req.user?.userId || req.query.requesterId;
+        const requesterRole = req.user.role;
+        const requesterId = req.user.userId;
 
         if (requesterRole !== 'Manager' && requesterId !== req.params.id) {
             return res.status(403).json({
