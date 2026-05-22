@@ -25,10 +25,10 @@ export async function createProject(req, res, next) {
             deadline
         } = req.body;
 
-        if (!name || !description || !teamId) {
+        if (!name || !teamId) {
             return res.status(400).json({
                 success: false,
-                message: 'name, description, and teamId are required'
+                message: 'name and teamId are required'
             });
         }
 

@@ -30,6 +30,10 @@ async function validateTaskRelations({ teamId, projectId, assigneeId }) {
         return 'Invalid projectId. Project does not exist.';
     }
 
+    if (project.teamId !== teamId) {
+        return 'Project does not belong to the selected team.';
+    }
+
     const assignee = await getItem(USERS_TABLE, { userId: assigneeId });
 
     if (!assignee) {
@@ -42,10 +46,6 @@ async function validateTaskRelations({ teamId, projectId, assigneeId }) {
 
     if (assignee.teamId !== teamId) {
         return 'Assignee does not belong to the selected team.';
-    }
-
-    if (project.teamId !== teamId) {
-        return 'Project does not belong to the selected team.';
     }
 
     return null;
@@ -146,7 +146,7 @@ export async function createTask(req, res, next) {
             imageUrl
         } = req.body;
 
-        if (!title || !description || !priority || !deadline || !assigneeId || !teamId || !projectId) {
+        if (!title || !priority || !deadline || !assigneeId || !teamId || !projectId) {
             return res.status(400).json({
                 success: false,
                 message: 'Missing required task fields'
