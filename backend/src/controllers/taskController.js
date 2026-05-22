@@ -86,15 +86,28 @@ async function publishTaskAssignment(task) {
     }
 }
 
-async function writeActivityLog({ taskId, userId, action, oldStatus, newStatus }) {
+async function writeActivityLog({
+    taskId,
+    projectId,
+    teamId,
+    userId,
+    action,
+    oldStatus,
+    newStatus
+}) {
+    if (!ACTIVITY_TABLE) return;
+
     try {
         await putItem(ACTIVITY_TABLE, {
+            activityId: uuidv4(),
             taskId,
-            timestamp: new Date().toISOString(),
+            projectId: projectId || null,
+            teamId: teamId || null,
             userId,
             action,
             oldStatus: oldStatus || null,
-            newStatus: newStatus || null
+            newStatus: newStatus || null,
+            createdAt: new Date().toISOString()
         });
     } catch (err) {
         console.error('ActivityLog write failed (non-fatal):', err.message);
@@ -360,8 +373,10 @@ export async function updateTask(req, res, next) {
             });
             await writeActivityLog({
                 taskId: req.params.id,
+                projectId: finalProjectId,
+                teamId: finalTeamId,
                 userId: req.user.userId,
-                action: 'StatusChanged',
+                action: 'TASK_STATUS_CHANGED',
                 oldStatus: task.status,
                 newStatus: finalStatus
             });
@@ -494,7 +509,12 @@ export async function getTaskActivity(req, res, next) {
             });
         }
 
-        const entries = await queryByPk(ACTIVITY_TABLE, 'taskId', req.params.id);
+        const entries = await queryByIndex(
+            ACTIVITY_TABLE,
+            'taskId-index',
+            'taskId',
+            req.params.id
+        );
 
         res.json({
             success: true,
