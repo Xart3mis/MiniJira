@@ -33,7 +33,7 @@ export default function DashboardPage() {
         <h1 className="text-lg font-semibold text-brand-silver">
           {user?.name ? `Hello, ${user.name.split(' ')[0]}` : 'Dashboard'}
         </h1>
-        <p className="text-sm text-brand-silver/35 mt-0.5">
+        <p className="text-sm text-brand-silver/65 mt-0.5">
           {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
         </p>
       </div>
@@ -45,10 +45,10 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
         <div className="lg:col-span-3 space-y-6">
           <section>
-            <h2 className="text-xs font-medium text-brand-silver/40 uppercase tracking-widest mb-3">
+            <h2 className="text-xs font-medium text-brand-silver/70 uppercase tracking-widest mb-3">
               Task activity — last 14 days
             </h2>
-            <div className="flex gap-4 text-xs text-brand-silver/30 mb-2">
+            <div className="flex gap-4 text-xs text-brand-silver/60 mb-2">
               <span className="flex items-center gap-1.5">
                 <span className="w-2.5 h-0.5 rounded bg-brand-rose inline-block" />
                 Created
@@ -63,7 +63,7 @@ export default function DashboardPage() {
 
           {isManager && (
             <section>
-              <h2 className="text-xs font-medium text-brand-silver/40 uppercase tracking-widest mb-3">
+              <h2 className="text-xs font-medium text-brand-silver/70 uppercase tracking-widest mb-3">
                 Team workload
               </h2>
               <TeamWorkload tasks={tasks} isLoading={isLoading} />
@@ -86,7 +86,7 @@ export default function DashboardPage() {
                     className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-brand-elevated transition-colors text-left group"
                   >
                     <CalendarBlank size={13} className="text-brand-rose shrink-0" />
-                    <span className="text-sm text-brand-silver/60 truncate flex-1 group-hover:text-brand-silver/80 transition-colors">
+                    <span className="text-sm text-brand-silver/80 truncate flex-1 group-hover:text-brand-silver transition-colors">
                       {task.title}
                     </span>
                     <PriorityBadge priority={task.priority} />
@@ -97,7 +97,7 @@ export default function DashboardPage() {
           )}
 
           <section>
-            <h2 className="text-xs font-medium text-brand-silver/40 uppercase tracking-widest mb-3">
+            <h2 className="text-xs font-medium text-brand-silver/70 uppercase tracking-widest mb-3">
               Recent activity
             </h2>
             {isLoading ? (
@@ -119,10 +119,10 @@ export default function DashboardPage() {
                   >
                     <StatusBadge status={task.status} className="mt-0.5 shrink-0" />
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm text-brand-silver/65 truncate group-hover:text-brand-silver/85 transition-colors">
+                      <p className="text-sm text-brand-silver/85 truncate group-hover:text-brand-silver transition-colors">
                         {task.title}
                       </p>
-                      <p className="text-[10px] text-brand-silver/25 font-mono mt-0.5">
+                      <p className="text-[10px] text-brand-silver/60 font-mono mt-0.5">
                         {formatRelative(task.updatedAt || task.createdAt)}
                       </p>
                     </div>

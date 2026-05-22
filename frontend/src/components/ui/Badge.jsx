@@ -39,7 +39,7 @@ export function PriorityBadge({ priority, className }) {
 
 export function Badge({ children, variant = 'default', className }) {
   const variants = {
-    default: 'bg-brand-elevated text-brand-silver/60 border border-[var(--border-default)]',
+    default: 'bg-brand-elevated text-brand-silver/90 border border-[var(--border-default)]',
     rose: 'bg-[var(--accent-rose-muted)] text-brand-rose',
     teal: 'bg-[var(--accent-teal-muted)] text-brand-teal',
   };

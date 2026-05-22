@@ -12,11 +12,17 @@ const useAuthStore = create(
 
       setAuth: (token) => {
         const payload = decodeJwt(token);
+        let role = payload?.['custom:role'] ?? 'Employee';
+        // Normalize role to PascalCase
+        if (role.toLowerCase() === 'manager') role = 'Manager';
+        if (role.toLowerCase() === 'employee') role = 'Employee';
+        if (role.toLowerCase() === 'admin') role = 'Admin';
+
         const user = {
           userId: payload?.sub ?? '',
           email: payload?.email ?? '',
           name: payload?.name ?? payload?.email ?? '',
-          role: payload?.['custom:role'] ?? 'Employee',
+          role: role,
           teamId: payload?.['custom:teamId'] ?? null,
         };
         set({ user, token, isAuthenticated: true });

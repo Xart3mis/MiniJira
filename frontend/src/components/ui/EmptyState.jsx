@@ -18,12 +18,12 @@ export default function EmptyState({
     >
       {Icon && (
         <div className="w-10 h-10 rounded-full bg-brand-elevated flex items-center justify-center">
-          <Icon size={20} className="text-brand-silver/30" weight="duotone" />
+          <Icon size={20} className="text-brand-silver/65" weight="duotone" />
         </div>
       )}
       <div className="space-y-1">
-        <p className="text-sm font-medium text-brand-silver/60">{title}</p>
-        {description && <p className="text-xs text-brand-silver/35 max-w-[240px]">{description}</p>}
+        <p className="text-sm font-medium text-brand-silver/85">{title}</p>
+        {description && <p className="text-xs text-brand-silver/65 max-w-[240px]">{description}</p>}
       </div>
       {action && actionLabel && (
         <Button variant="secondary" size="sm" onClick={action}>

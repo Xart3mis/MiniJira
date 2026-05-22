@@ -51,66 +51,72 @@ export default function CommandPalette() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.15 }}
-          className="fixed inset-0 z-50 flex items-start justify-center pt-[18vh]"
+          transition={{ duration: 0.2 }}
+          className="fixed inset-0 z-50 flex items-start justify-center pt-[14vh] px-4"
           onClick={closeCommandPalette}
         >
           <div
-            className="absolute inset-0 bg-brand-base/70 backdrop-blur-sm"
+            className="absolute inset-0 bg-brand-base/80 backdrop-blur-md"
             aria-hidden="true"
           />
           <motion.div
-            initial={{ scale: 0.97, opacity: 0, y: -8 }}
+            initial={{ scale: 0.98, opacity: 0, y: -12 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.97, opacity: 0, y: -4 }}
-            transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-            className="relative w-full max-w-lg"
+            exit={{ scale: 0.98, opacity: 0, y: -8 }}
+            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            className="relative w-full max-w-xl"
             onClick={(e) => e.stopPropagation()}
           >
             <Command
-              className="bg-brand-overlay border border-[var(--border-strong)] rounded-xl overflow-hidden shadow-2xl"
+              className="bg-brand-overlay/95 border border-white/5 rounded-2xl overflow-hidden shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)] backdrop-blur-xl"
               shouldFilter
             >
-              <div className="flex items-center gap-3 px-4 border-b border-[var(--border-default)]">
-                <MagnifyingGlass size={16} className="text-brand-silver/40 shrink-0" />
+              <div className="flex items-center gap-4 px-5 h-16 border-b border-white/5">
+                <MagnifyingGlass weight="bold" size={20} className="text-brand-silver/30 shrink-0" />
                 <Command.Input
-                  placeholder="Search tasks, navigate..."
-                  className="flex-1 h-12 bg-transparent text-sm text-brand-silver placeholder:text-brand-silver/30 outline-none"
+                  placeholder="Search for anything..."
+                  className="flex-1 bg-transparent text-base text-brand-silver placeholder:text-brand-silver/30 outline-none focus:ring-0"
                   autoFocus
                 />
-                <kbd className="text-[10px] text-brand-silver/30 border border-[var(--border-subtle)] rounded px-1.5 py-0.5 font-mono">
-                  ESC
-                </kbd>
+                <div className="flex items-center gap-1.5 px-2 py-1 bg-brand-elevated/50 border border-white/10 rounded-lg shadow-sm">
+                  <span className="text-[10px] font-bold text-brand-silver/40 tracking-wider">ESC</span>
+                </div>
               </div>
 
-              <Command.List className="max-h-[320px] overflow-y-auto p-1.5">
-                <Command.Empty className="py-8 text-center text-sm text-brand-silver/30">
-                  No results
+              <Command.List className="max-h-[60vh] overflow-y-auto p-2">
+                <Command.Empty className="py-12 text-center">
+                  <div className="flex flex-col items-center gap-2">
+                    <MagnifyingGlass size={32} weight="duotone" className="text-brand-silver/10" />
+                    <p className="text-sm text-brand-silver/30 font-medium">No results found</p>
+                  </div>
                 </Command.Empty>
 
                 {user?.role === 'Manager' && (
                   <Command.Group
                     heading={
-                      <span className="px-2 py-1 text-[10px] font-medium text-brand-silver/30 uppercase tracking-widest">
+                      <div className="px-3 py-2 text-[10px] font-bold text-brand-silver/20 uppercase tracking-[0.2em]">
                         Actions
-                      </span>
+                      </div>
                     }
                   >
                     <Command.Item
                       onSelect={() => { openCreateTask(); closeCommandPalette(); }}
-                      className="flex items-center gap-2.5 px-3 py-2 text-sm text-brand-silver rounded-md cursor-pointer data-[selected]:bg-brand-highlight"
+                      className="group flex items-center gap-3 px-3 py-3 text-sm text-brand-silver/80 rounded-xl cursor-pointer data-[selected]:bg-white/[0.03] data-[selected]:text-brand-silver transition-all"
                     >
-                      <Plus size={14} className="text-brand-rose" />
-                      Create new task
+                      <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-brand-rose/10 group-data-[selected]:bg-brand-rose/20 transition-colors">
+                        <Plus size={18} weight="bold" className="text-brand-rose" />
+                      </div>
+                      <span className="font-medium">Create new task</span>
+                      <kbd className="ml-auto text-[10px] font-mono text-brand-silver/20 group-data-[selected]:text-brand-silver/40 transition-colors">N</kbd>
                     </Command.Item>
                   </Command.Group>
                 )}
 
                 <Command.Group
                   heading={
-                    <span className="px-2 py-1 text-[10px] font-medium text-brand-silver/30 uppercase tracking-widest">
+                    <div className="px-3 py-2 mt-4 text-[10px] font-bold text-brand-silver/20 uppercase tracking-[0.2em]">
                       Navigate
-                    </span>
+                    </div>
                   }
                 >
                   {visibleNav.map(({ id, label, path, icon: Icon }) => (
@@ -118,11 +124,13 @@ export default function CommandPalette() {
                       key={id}
                       value={label}
                       onSelect={() => { navigate(path); closeCommandPalette(); }}
-                      className="flex items-center gap-2.5 px-3 py-2 text-sm text-brand-silver rounded-md cursor-pointer data-[selected]:bg-brand-highlight"
+                      className="group flex items-center gap-3 px-3 py-3 text-sm text-brand-silver/80 rounded-xl cursor-pointer data-[selected]:bg-white/[0.03] data-[selected]:text-brand-silver transition-all"
                     >
-                      <Icon size={14} className="text-brand-silver/40" />
-                      {label}
-                      <ArrowRight size={12} className="ml-auto text-brand-silver/20" />
+                      <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-white/5 group-data-[selected]:bg-white/10 transition-colors">
+                        <Icon size={18} weight="duotone" className="text-brand-silver/50 group-data-[selected]:text-brand-silver/80" />
+                      </div>
+                      <span className="font-medium">{label}</span>
+                      <ArrowRight weight="bold" size={14} className="ml-auto text-brand-silver/10 group-data-[selected]:text-brand-silver/30 opacity-0 group-data-[selected]:opacity-100 -translate-x-2 group-data-[selected]:translate-x-0 transition-all" />
                     </Command.Item>
                   ))}
                 </Command.Group>
@@ -130,9 +138,9 @@ export default function CommandPalette() {
                 {tasks.length > 0 && (
                   <Command.Group
                     heading={
-                      <span className="px-2 py-1 text-[10px] font-medium text-brand-silver/30 uppercase tracking-widest">
+                      <div className="px-3 py-2 mt-4 text-[10px] font-bold text-brand-silver/20 uppercase tracking-[0.2em]">
                         Tasks
-                      </span>
+                      </div>
                     }
                   >
                     {tasks.slice(0, 8).map((task) => (
@@ -143,19 +151,37 @@ export default function CommandPalette() {
                           openTaskPanel(task.taskId);
                           closeCommandPalette();
                         }}
-                        className="flex items-center gap-2.5 px-3 py-2 text-sm text-brand-silver rounded-md cursor-pointer data-[selected]:bg-brand-highlight"
+                        className="group flex items-center gap-3 px-3 py-3 text-sm text-brand-silver/80 rounded-xl cursor-pointer data-[selected]:bg-white/[0.03] data-[selected]:text-brand-silver transition-all"
                       >
-                        <span className="w-1.5 h-1.5 rounded-full bg-brand-silver/30 shrink-0" />
-                        <span className="truncate">{task.title}</span>
+                        <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-white/5 group-data-[selected]:bg-white/10 transition-colors">
+                          <div className={`w-2 h-2 rounded-full ${
+                            task.priority === 'High' ? 'bg-brand-rose' : 
+                            task.priority === 'Critical' ? 'bg-brand-rose shadow-[0_0_8px_var(--accent-rose)]' : 
+                            'bg-brand-silver/20'
+                          }`} />
+                        </div>
+                        <div className="flex flex-col gap-0.5 min-w-0">
+                          <span className="font-medium truncate">{task.title}</span>
+                          <span className="text-[10px] text-brand-silver/30 group-data-[selected]:text-brand-silver/50 transition-colors uppercase tracking-wider">{task.status}</span>
+                        </div>
                       </Command.Item>
                     ))}
                   </Command.Group>
                 )}
               </Command.List>
 
-              <div className="border-t border-[var(--border-subtle)] px-4 py-2 flex items-center gap-3">
-                <span className="text-[10px] text-brand-silver/25 font-mono">↑↓ navigate</span>
-                <span className="text-[10px] text-brand-silver/25 font-mono">↵ select</span>
+              <div className="border-t border-white/5 px-5 py-3 flex items-center gap-6 bg-brand-base/20">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold text-brand-silver/20 uppercase tracking-widest">Navigate</span>
+                  <div className="flex gap-1">
+                    <kbd className="px-1 py-0.5 bg-white/5 border border-white/10 rounded text-[9px] font-bold text-brand-silver/40">↑</kbd>
+                    <kbd className="px-1 py-0.5 bg-white/5 border border-white/10 rounded text-[9px] font-bold text-brand-silver/40">↓</kbd>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold text-brand-silver/20 uppercase tracking-widest">Select</span>
+                  <kbd className="px-1.5 py-0.5 bg-white/5 border border-white/10 rounded text-[9px] font-bold text-brand-silver/40">ENTER</kbd>
+                </div>
               </div>
             </Command>
           </motion.div>

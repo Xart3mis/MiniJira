@@ -12,7 +12,7 @@ const Input = forwardRef(function Input(
       {label && (
         <label
           htmlFor={inputId}
-          className="text-xs font-medium text-brand-silver/70 tracking-wide uppercase"
+          className="text-xs font-medium text-brand-silver/80 tracking-wide uppercase"
         >
           {label}
           {required && <span className="text-brand-rose ml-0.5">*</span>}
@@ -23,7 +23,7 @@ const Input = forwardRef(function Input(
         id={inputId}
         className={cn(
           'h-9 w-full rounded-md px-3 text-sm bg-brand-elevated text-brand-silver',
-          'border border-[var(--border-default)] placeholder:text-brand-silver/30',
+          'border border-[var(--border-default)] placeholder:text-brand-silver/65',
           'transition-colors duration-150',
           'focus:outline-none focus:border-brand-rose focus:ring-1 focus:ring-brand-rose/30',
           error && 'border-brand-rose/60 focus:border-brand-rose focus:ring-brand-rose/30',
@@ -33,7 +33,7 @@ const Input = forwardRef(function Input(
         {...props}
       />
       {error && <p className="text-xs text-brand-rose">{error}</p>}
-      {helper && !error && <p className="text-xs text-brand-silver/40">{helper}</p>}
+      {helper && !error && <p className="text-xs text-brand-silver/70">{helper}</p>}
     </div>
   );
 });
@@ -48,7 +48,7 @@ export function Textarea({ label, error, helper, className, required, id, ...pro
       {label && (
         <label
           htmlFor={inputId}
-          className="text-xs font-medium text-brand-silver/70 tracking-wide uppercase"
+          className="text-xs font-medium text-brand-silver/80 tracking-wide uppercase"
         >
           {label}
           {required && <span className="text-brand-rose ml-0.5">*</span>}
@@ -59,7 +59,7 @@ export function Textarea({ label, error, helper, className, required, id, ...pro
         rows={4}
         className={cn(
           'w-full rounded-md px-3 py-2 text-sm bg-brand-elevated text-brand-silver',
-          'border border-[var(--border-default)] placeholder:text-brand-silver/30',
+          'border border-[var(--border-default)] placeholder:text-brand-silver/65',
           'transition-colors duration-150 resize-none',
           'focus:outline-none focus:border-brand-rose focus:ring-1 focus:ring-brand-rose/30',
           error && 'border-brand-rose/60',
@@ -69,7 +69,7 @@ export function Textarea({ label, error, helper, className, required, id, ...pro
         {...props}
       />
       {error && <p className="text-xs text-brand-rose">{error}</p>}
-      {helper && !error && <p className="text-xs text-brand-silver/40">{helper}</p>}
+      {helper && !error && <p className="text-xs text-brand-silver/70">{helper}</p>}
     </div>
   );
 }

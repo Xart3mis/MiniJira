@@ -47,7 +47,7 @@ export default function ProjectList({ projects = [], isLoading, onEdit }) {
               <div className="w-7 h-7 rounded-md bg-[var(--accent-teal-muted)] flex items-center justify-center shrink-0">
                 <FolderOpen size={14} className="text-brand-teal" weight="fill" />
               </div>
-              <h3 className="text-sm font-medium text-brand-silver truncate">{project.title}</h3>
+              <h3 className="text-sm font-medium text-brand-silver truncate">{project.name}</h3>
             </div>
 
             {isManager && (

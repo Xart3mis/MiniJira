@@ -40,7 +40,7 @@ async function validateTaskRelations({ teamId, projectId, assigneeId }) {
         return 'Invalid assigneeId. User does not exist.';
     }
 
-    if (assignee.role !== 'Employee') {
+    if (assignee.role?.toLowerCase() !== 'employee') {
         return 'Task assignee must be an Employee.';
     }
 

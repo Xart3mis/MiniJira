@@ -9,14 +9,14 @@ export default {
       },
       colors: {
         brand: {
-          base: '#020306',
-          raised: '#0a0b12',
-          overlay: '#131420',
-          elevated: '#1a1b2c',
-          highlight: '#21222f',
-          silver: '#BCBABB',
-          rose: '#904E55',
-          teal: '#256A69',
+          base: '#111218',
+          raised: '#1b1c23',
+          overlay: '#25272e',
+          elevated: '#30323a',
+          highlight: '#3b3d46',
+          silver: '#d1d1d6',
+          rose: '#bf6d75',
+          teal: '#368c8a',
         },
       },
       animation: {

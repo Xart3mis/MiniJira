@@ -12,12 +12,12 @@ export function getInitials(name = '') {
 }
 
 const AVATAR_COLORS = [
-  'bg-[#904e55] text-[#f0edee]',
-  'bg-[#256a69] text-[#e8f0f0]',
-  'bg-[#4a5568] text-[#e2e8f0]',
-  'bg-[#5a4a6e] text-[#ede8f5]',
-  'bg-[#6a5a4a] text-[#f5ede8]',
-  'bg-[#4a6a5a] text-[#e8f5ee]',
+  'bg-[#bf6d75] text-[#f0edee]',
+  'bg-[#368c8a] text-[#e8f0f0]',
+  'bg-[#6c86a3] text-[#f0f4f8]',
+  'bg-[#9c8191] text-[#f5f0f2]',
+  'bg-[#a38f6c] text-[#f8f5f0]',
+  'bg-[#6ca386] text-[#f0f8f4]',
 ];
 
 export function avatarColor(name = '') {

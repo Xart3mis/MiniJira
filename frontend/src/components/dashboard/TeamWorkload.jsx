@@ -3,10 +3,10 @@ import { Skeleton } from '../ui/Skeleton';
 import { useUsers } from '../../hooks/useUsers';
 
 const COLORS = {
-  ToDo: 'rgba(188,186,187,0.25)',
-  InProgress: '#904e55',
-  InReview: '#7a5a6e',
-  Done: '#256a69',
+  ToDo: 'rgba(209,209,214,0.25)',
+  InProgress: '#bf6d75',
+  InReview: '#9c8191',
+  Done: '#368c8a',
 };
 
 const CustomTooltip = ({ active, payload, label }) => {
@@ -15,7 +15,7 @@ const CustomTooltip = ({ active, payload, label }) => {
     <div className="bg-brand-elevated border border-[var(--border-default)] rounded-lg px-3 py-2 text-xs shadow-xl">
       <p className="text-brand-silver/60 mb-1 font-medium">{label}</p>
       {payload.map((p) => (
-        <p key={p.name} style={{ color: p.fill === 'rgba(188,186,187,0.25)' ? 'rgba(188,186,187,0.5)' : p.fill }}>
+        <p key={p.name} style={{ color: p.fill === 'rgba(209,209,214,0.25)' ? 'rgba(209,209,214,0.5)' : p.fill }}>
           {p.name}: <span className="font-mono font-medium">{p.value}</span>
         </p>
       ))}
@@ -54,7 +54,7 @@ export default function TeamWorkload({ tasks = [], isLoading }) {
       <BarChart data={workload} layout="vertical" margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
         <XAxis
           type="number"
-          tick={{ fill: 'rgba(188,186,187,0.25)', fontSize: 10, fontFamily: 'DM Mono' }}
+          tick={{ fill: 'rgba(209,209,214,0.55)', fontSize: 10, fontFamily: 'DM Mono' }}
           axisLine={false}
           tickLine={false}
           allowDecimals={false}
@@ -62,12 +62,12 @@ export default function TeamWorkload({ tasks = [], isLoading }) {
         <YAxis
           type="category"
           dataKey="name"
-          tick={{ fill: 'rgba(188,186,187,0.45)', fontSize: 11, fontFamily: 'DM Sans' }}
+          tick={{ fill: 'rgba(209,209,214,0.7)', fontSize: 11, fontFamily: 'DM Sans' }}
           axisLine={false}
           tickLine={false}
           width={60}
         />
-        <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(188,186,187,0.04)' }} />
+        <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(209,209,214,0.04)' }} />
         {['ToDo', 'InProgress', 'InReview', 'Done'].map((key) => (
           <Bar key={key} dataKey={key} stackId="a" fill={COLORS[key]} radius={key === 'Done' ? [0, 3, 3, 0] : 0} />
         ))}

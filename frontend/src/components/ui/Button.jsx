@@ -2,11 +2,11 @@ import { cn } from '../../lib/utils';
 import { motion } from 'framer-motion';
 
 const variants = {
-  primary: 'bg-brand-rose hover:bg-[#a05860] text-[#f0edee] border border-[rgba(144,78,85,0.4)]',
+  primary: 'bg-brand-rose hover:bg-[#cc7d85] text-[#f0edee] border border-[rgba(144,78,85,0.4)]',
   secondary:
     'bg-brand-elevated hover:bg-brand-highlight text-brand-silver border border-[var(--border-default)] hover:border-[var(--border-strong)]',
-  ghost: 'bg-transparent hover:bg-brand-elevated text-brand-silver/70 hover:text-brand-silver',
-  teal: 'bg-brand-teal hover:bg-[#2c7d7c] text-[#e8f0f0] border border-[rgba(37,106,105,0.4)]',
+  ghost: 'bg-transparent hover:bg-brand-elevated text-brand-silver/80 hover:text-brand-silver',
+  teal: 'bg-brand-teal hover:bg-[#3fa19f] text-[#e8f0f0] border border-[rgba(37,106,105,0.4)]',
   danger: 'bg-[var(--accent-rose-muted)] hover:bg-[rgba(144,78,85,0.22)] text-brand-rose border border-[var(--accent-rose-border)]',
 };
 

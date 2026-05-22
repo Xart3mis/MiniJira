@@ -14,7 +14,7 @@ export default function ProjectForm({ project, onClose }) {
   const { data: teams = [] } = useTeams();
 
   const [form, setForm] = useState({
-    title: '',
+    name: '',
     description: '',
     teamId: user?.teamId ?? '',
   });
@@ -23,7 +23,7 @@ export default function ProjectForm({ project, onClose }) {
   useEffect(() => {
     if (project) {
       setForm({
-        title: project.title ?? '',
+        name: project.name ?? '',
         description: project.description ?? '',
         teamId: project.teamId ?? '',
       });
@@ -37,7 +37,7 @@ export default function ProjectForm({ project, onClose }) {
 
   const validate = () => {
     const errs = {};
-    if (!form.title.trim()) errs.title = 'Title is required';
+    if (!form.name.trim()) errs.name = 'Name is required';
     if (!form.teamId) errs.teamId = 'Team is required';
     setErrors(errs);
     return Object.keys(errs).length === 0;
@@ -47,8 +47,8 @@ export default function ProjectForm({ project, onClose }) {
     e.preventDefault();
     if (!validate()) return;
     const payload = {
-      title: form.title.trim(),
-      description: form.description.trim() || undefined,
+      name: form.name.trim(),
+      description: form.description.trim(),
       teamId: form.teamId,
     };
     if (isEditing) {
@@ -66,9 +66,9 @@ export default function ProjectForm({ project, onClose }) {
         label="Project name"
         required
         placeholder="e.g. Backend refactor, Q3 roadmap..."
-        value={form.title}
-        onChange={(e) => set('title', e.target.value)}
-        error={errors.title}
+        value={form.name}
+        onChange={(e) => set('name', e.target.value)}
+        error={errors.name}
         autoFocus={!isEditing}
       />
       <Textarea

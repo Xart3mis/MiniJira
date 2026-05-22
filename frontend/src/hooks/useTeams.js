@@ -59,3 +59,33 @@ export function useDeleteTeam() {
     },
   });
 }
+
+export function useAddMember() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ teamId, userId }) => teamsApi.addMember(teamId, userId),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['teams'] });
+      qc.invalidateQueries({ queryKey: ['users'] });
+      toast.success('Member added');
+    },
+    onError: (err) => {
+      toast.error(err.response?.data?.message || 'Failed to add member');
+    },
+  });
+}
+
+export function useRemoveMember() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ teamId, userId }) => teamsApi.removeMember(teamId, userId),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['teams'] });
+      qc.invalidateQueries({ queryKey: ['users'] });
+      toast.success('Member removed');
+    },
+    onError: (err) => {
+      toast.error(err.response?.data?.message || 'Failed to remove member');
+    },
+  });
+}

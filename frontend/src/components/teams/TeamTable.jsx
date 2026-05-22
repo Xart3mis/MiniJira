@@ -1,4 +1,5 @@
-import { UsersThree, Trash, PencilSimple } from '@phosphor-icons/react';
+import { useState } from 'react';
+import { UsersThree, Trash, PencilSimple, UserGear, Copy, Check } from '@phosphor-icons/react';
 import { motion } from 'framer-motion';
 import { cn } from '../../lib/utils';
 import { SkeletonRow } from '../ui/Skeleton';
@@ -8,11 +9,43 @@ import Button from '../ui/Button';
 import { useUsers } from '../../hooks/useUsers';
 import { useDeleteTeam } from '../../hooks/useTeams';
 import { useTasks } from '../../hooks/useTasks';
+import useAuthStore from '../../store/authStore';
 
-export default function TeamTable({ teams = [], isLoading, onEdit }) {
+function CopyableId({ id }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(id);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {}
+  };
+
+  return (
+    <button
+      onClick={handleCopy}
+      title="Copy team ID"
+      className={cn(
+        'inline-flex items-center gap-1 px-1.5 py-0.5 rounded font-mono text-[10px] transition-colors',
+        'bg-brand-elevated border border-[var(--border-subtle)]',
+        copied
+          ? 'text-brand-teal border-brand-teal/30'
+          : 'text-brand-silver/30 hover:text-brand-silver/60 hover:border-[var(--border-default)]'
+      )}
+    >
+      <span>{id.slice(0, 8)}&hellip;</span>
+      {copied ? <Check size={9} weight="bold" /> : <Copy size={9} />}
+    </button>
+  );
+}
+
+export default function TeamTable({ teams = [], isLoading, onEdit, onManageMembers }) {
+  const { isManager } = useAuthStore();
   const { data: users = [] } = useUsers();
   const { data: tasks = [] } = useTasks();
   const deleteTeam = useDeleteTeam();
+  const managerMode = isManager();
 
   if (isLoading) {
     return (
@@ -40,6 +73,9 @@ export default function TeamTable({ teams = [], isLoading, onEdit }) {
             <th className="text-left py-2.5 px-3 text-xs text-brand-silver/35 font-medium uppercase tracking-wide">
               Team
             </th>
+            <th className="text-left py-2.5 px-3 text-xs text-brand-silver/35 font-medium uppercase tracking-wide hidden md:table-cell">
+              Team ID
+            </th>
             <th className="text-left py-2.5 px-3 text-xs text-brand-silver/35 font-medium uppercase tracking-wide hidden sm:table-cell">
               Members
             </th>
@@ -49,7 +85,7 @@ export default function TeamTable({ teams = [], isLoading, onEdit }) {
             <th className="text-right py-2.5 px-3 text-xs text-brand-silver/35 font-medium uppercase tracking-wide hidden lg:table-cell">
               Done
             </th>
-            <th className="py-2.5 px-3 w-20" />
+            <th className="py-2.5 px-3 w-24" />
           </tr>
         </thead>
         <tbody>
@@ -75,6 +111,9 @@ export default function TeamTable({ teams = [], isLoading, onEdit }) {
                     <span className="text-brand-silver/80 font-medium">{team.name}</span>
                   </div>
                 </td>
+                <td className="py-3 px-3 hidden md:table-cell">
+                  <CopyableId id={team.teamId} />
+                </td>
                 <td className="py-3 px-3 hidden sm:table-cell">
                   <div className="flex items-center gap-2">
                     <AvatarGroup
@@ -93,20 +132,34 @@ export default function TeamTable({ teams = [], isLoading, onEdit }) {
                 </td>
                 <td className="py-3 px-3">
                   <div className="flex items-center justify-end gap-1">
-                    <button
-                      onClick={() => onEdit?.(team)}
-                      className="w-7 h-7 flex items-center justify-center rounded text-brand-silver/25 hover:text-brand-silver/60 hover:bg-brand-elevated transition-colors"
-                      aria-label={`Edit ${team.name}`}
-                    >
-                      <PencilSimple size={13} />
-                    </button>
-                    <button
-                      onClick={() => deleteTeam.mutate(team.teamId)}
-                      className="w-7 h-7 flex items-center justify-center rounded text-brand-silver/25 hover:text-brand-rose hover:bg-[var(--accent-rose-muted)] transition-colors"
-                      aria-label={`Delete ${team.name}`}
-                    >
-                      <Trash size={13} />
-                    </button>
+                    {managerMode && (
+                      <button
+                        onClick={() => onManageMembers?.(team)}
+                        className="w-7 h-7 flex items-center justify-center rounded text-brand-silver/25 hover:text-brand-teal hover:bg-brand-elevated transition-colors"
+                        aria-label={`Manage members of ${team.name}`}
+                        title="Manage members"
+                      >
+                        <UserGear size={13} />
+                      </button>
+                    )}
+                    {managerMode && (
+                      <button
+                        onClick={() => onEdit?.(team)}
+                        className="w-7 h-7 flex items-center justify-center rounded text-brand-silver/25 hover:text-brand-silver/60 hover:bg-brand-elevated transition-colors"
+                        aria-label={`Edit ${team.name}`}
+                      >
+                        <PencilSimple size={13} />
+                      </button>
+                    )}
+                    {managerMode && (
+                      <button
+                        onClick={() => deleteTeam.mutate(team.teamId)}
+                        className="w-7 h-7 flex items-center justify-center rounded text-brand-silver/25 hover:text-brand-rose hover:bg-[var(--accent-rose-muted)] transition-colors"
+                        aria-label={`Delete ${team.name}`}
+                      >
+                        <Trash size={13} />
+                      </button>
+                    )}
                   </div>
                 </td>
               </motion.tr>

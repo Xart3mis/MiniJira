@@ -58,7 +58,7 @@ export default function TaskCard({ task, isDragOverlay = false }) {
         </div>
 
         {task.description && (
-          <p className="text-xs text-brand-silver/35 mb-2.5 line-clamp-1">{task.description}</p>
+          <p className="text-xs text-brand-silver/65 mb-2.5 line-clamp-1">{task.description}</p>
         )}
 
         <div className="flex items-center justify-between gap-2">
@@ -70,8 +70,8 @@ export default function TaskCard({ task, isDragOverlay = false }) {
                   overdue
                     ? 'text-brand-rose'
                     : days !== null && days <= 2
-                    ? 'text-amber-400/70'
-                    : 'text-brand-silver/35'
+                    ? 'text-amber-300'
+                    : 'text-brand-silver/60'
                 )}
               >
                 <CalendarBlank size={10} />
@@ -82,13 +82,13 @@ export default function TaskCard({ task, isDragOverlay = false }) {
 
           <div className="flex items-center gap-2 shrink-0">
             {task.commentCount > 0 && (
-              <span className="flex items-center gap-0.5 text-[10px] text-brand-silver/30">
+              <span className="flex items-center gap-0.5 text-[10px] text-brand-silver/60">
                 <ChatCircle size={11} />
                 {task.commentCount}
               </span>
             )}
             {task.imageUrl && (
-              <Paperclip size={11} className="text-brand-silver/25" />
+              <Paperclip size={11} className="text-brand-silver/60" />
             )}
             {task.assigneeName && (
               <Avatar name={task.assigneeName} size="xs" />

@@ -3,29 +3,33 @@
 @tailwind utilities;
 
 :root {
-  --bg-base: #020306;
-  --bg-raised: #0a0b12;
-  --bg-overlay: #131420;
-  --bg-elevated: #1a1b2c;
-  --bg-highlight: #21222f;
+  /* Surface Scale (OKLCH: Lightness Chroma Hue) */
+  --bg-base: oklch(14% 0.007 284);
+  --bg-raised: oklch(18% 0.007 284);
+  --bg-overlay: oklch(22% 0.008 284);
+  --bg-elevated: oklch(26% 0.009 284);
+  --bg-highlight: oklch(30% 0.01 284);
 
-  --text-primary: #bcbabb;
-  --text-secondary: rgba(188, 186, 187, 0.62);
-  --text-tertiary: rgba(188, 186, 187, 0.36);
+  /* Text Scale - Calibrated for AA contrast on --bg-base */
+  --text-primary: oklch(85% 0.005 284);
+  --text-secondary: oklch(65% 0.005 284);
+  --text-tertiary: oklch(50% 0.005 284);
 
-  --border-subtle: rgba(188, 186, 187, 0.06);
-  --border-default: rgba(188, 186, 187, 0.11);
-  --border-strong: rgba(188, 186, 187, 0.22);
+  /* Borders */
+  --border-subtle: oklch(20% 0.008 284);
+  --border-default: oklch(26% 0.009 284);
+  --border-strong: oklch(32% 0.01 284);
 
-  --accent-rose: #904e55;
-  --accent-rose-hover: #a05860;
-  --accent-rose-muted: rgba(144, 78, 85, 0.13);
-  --accent-rose-border: rgba(144, 78, 85, 0.28);
+  /* Semantic Accents - Adjusted for visibility */
+  --accent-rose: oklch(62% 0.12 11);
+  --accent-rose-hover: oklch(68% 0.13 11);
+  --accent-rose-muted: oklch(25% 0.04 11);
+  --accent-rose-border: oklch(35% 0.06 11);
 
-  --accent-teal: #256a69;
-  --accent-teal-hover: #2c7d7c;
-  --accent-teal-muted: rgba(37, 106, 105, 0.13);
-  --accent-teal-border: rgba(37, 106, 105, 0.28);
+  --accent-teal: oklch(62% 0.08 193);
+  --accent-teal-hover: oklch(68% 0.09 193);
+  --accent-teal-muted: oklch(25% 0.04 193);
+  --accent-teal-border: oklch(35% 0.06 193);
 }
 
 *,

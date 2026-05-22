@@ -56,50 +56,50 @@ export default function ActivityChart({ tasks = [], isLoading }) {
       <AreaChart data={data} margin={{ top: 4, right: 0, bottom: 0, left: -20 }}>
         <defs>
           <linearGradient id="rose-grad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#904e55" stopOpacity={0.25} />
-            <stop offset="100%" stopColor="#904e55" stopOpacity={0} />
+            <stop offset="0%" stopColor="#bf6d75" stopOpacity={0.25} />
+            <stop offset="100%" stopColor="#bf6d75" stopOpacity={0} />
           </linearGradient>
           <linearGradient id="teal-grad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#256a69" stopOpacity={0.25} />
-            <stop offset="100%" stopColor="#256a69" stopOpacity={0} />
+            <stop offset="0%" stopColor="#368c8a" stopOpacity={0.25} />
+            <stop offset="100%" stopColor="#368c8a" stopOpacity={0} />
           </linearGradient>
         </defs>
         <CartesianGrid
           strokeDasharray="3 3"
-          stroke="rgba(188,186,187,0.06)"
+          stroke="rgba(209,209,214,0.06)"
           vertical={false}
         />
         <XAxis
           dataKey="date"
-          tick={{ fill: 'rgba(188,186,187,0.3)', fontSize: 10, fontFamily: 'DM Mono' }}
+          tick={{ fill: 'rgba(209,209,214,0.6)', fontSize: 10, fontFamily: 'DM Mono' }}
           axisLine={false}
           tickLine={false}
           interval={2}
         />
         <YAxis
-          tick={{ fill: 'rgba(188,186,187,0.25)', fontSize: 10, fontFamily: 'DM Mono' }}
+          tick={{ fill: 'rgba(209,209,214,0.55)', fontSize: 10, fontFamily: 'DM Mono' }}
           axisLine={false}
           tickLine={false}
           allowDecimals={false}
         />
-        <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'rgba(188,186,187,0.08)' }} />
+        <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'rgba(209,209,214,0.08)' }} />
         <Area
           type="monotone"
           dataKey="created"
-          stroke="#904e55"
+          stroke="#bf6d75"
           strokeWidth={1.5}
           fill="url(#rose-grad)"
           dot={false}
-          activeDot={{ r: 4, fill: '#904e55', strokeWidth: 0 }}
+          activeDot={{ r: 4, fill: '#bf6d75', strokeWidth: 0 }}
         />
         <Area
           type="monotone"
           dataKey="completed"
-          stroke="#256a69"
+          stroke="#368c8a"
           strokeWidth={1.5}
           fill="url(#teal-grad)"
           dot={false}
-          activeDot={{ r: 4, fill: '#256a69', strokeWidth: 0 }}
+          activeDot={{ r: 4, fill: '#368c8a', strokeWidth: 0 }}
         />
       </AreaChart>
     </ResponsiveContainer>

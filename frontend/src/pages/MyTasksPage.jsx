@@ -29,12 +29,14 @@ export default function MyTasksPage() {
     return acc;
   }, {});
 
+  const isManager = user?.role === 'Manager';
+
   return (
     <div className="px-6 py-6 max-w-[900px] mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-lg font-semibold text-brand-silver">My Tasks</h1>
-          <p className="text-sm text-brand-silver/35 mt-0.5">{allTasks.length} assigned to you</p>
+          <p className="text-sm text-brand-silver/35 mt-0.5">{allTasks.length} assigned{isManager ? "" : " to You"}</p>
         </div>
         <div className="w-40">
           <Select

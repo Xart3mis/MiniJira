@@ -29,15 +29,16 @@ export async function createUser(req, res, next) {
         }
 
         const allowedRoles = ['Manager', 'Employee'];
+        const normalizedRole = role ? (role.charAt(0).toUpperCase() + role.slice(1).toLowerCase()) : role;
 
-        if (!allowedRoles.includes(role)) {
+        if (!allowedRoles.includes(normalizedRole)) {
             return res.status(400).json({
                 success: false,
                 message: 'role must be either Manager or Employee'
             });
         }
 
-        if (role === 'Employee' && !teamId) {
+        if (normalizedRole === 'Employee' && !teamId) {
             return res.status(400).json({
                 success: false,
                 message: 'teamId is required for Employee users'
@@ -74,7 +75,7 @@ export async function createUser(req, res, next) {
             userId: bodyUserId || uuidv4(),
             name,
             email,
-            role,
+            role: normalizedRole,
             teamId: teamId || '',
             createdAt: now,
             updatedAt: now
@@ -188,7 +189,8 @@ export async function updateUser(req, res, next) {
             teamId
         } = req.body;
 
-        const finalRole = role ?? user.role;
+        const rawRole = role ?? user.role;
+        const finalRole = rawRole ? (rawRole.charAt(0).toUpperCase() + rawRole.slice(1).toLowerCase()) : rawRole;
         const finalTeamId = teamId ?? user.teamId;
 
         const allowedRoles = ['Manager', 'Employee'];

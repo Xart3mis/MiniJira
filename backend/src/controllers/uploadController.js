@@ -42,7 +42,7 @@ export async function getPresignedUploadUrl(req, res, next) {
 
         // The resized version will be written here by the imageResize Lambda
         const resizedKey = key.replace('originals/', 'resized/');
-        const imageUrl = `https://${RESIZED_BUCKET}.s3.amazonaws.com/${resizedKey}`;
+        const imageUrl = `https://${RESIZED_BUCKET}.s3.eu-north-1.amazonaws.com/${resizedKey}`;
 
         res.json({
             success: true,

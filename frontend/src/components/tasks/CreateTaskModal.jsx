@@ -38,6 +38,10 @@ export default function CreateTaskModal() {
     (u) => !form.teamId || u.teamId === form.teamId
   );
 
+  const teamProjects = projects.filter(
+    (p) => !form.teamId || p.teamId === form.teamId
+  );
+
   const set = (key, val) => {
     setForm((f) => ({ ...f, [key]: val }));
     if (errors[key]) setErrors((e) => ({ ...e, [key]: null }));
@@ -47,6 +51,9 @@ export default function CreateTaskModal() {
     const errs = {};
     if (!form.title.trim()) errs.title = 'Title is required';
     if (!form.teamId) errs.teamId = 'Team is required';
+    if (!form.projectId) errs.projectId = 'Project is required';
+    if (!form.assigneeId) errs.assigneeId = 'Assignee is required';
+    if (!form.deadline) errs.deadline = 'Deadline is required';
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -133,36 +140,46 @@ export default function CreateTaskModal() {
                 label="Team"
                 required
                 value={form.teamId}
-                onValueChange={(v) => { set('teamId', v); set('assigneeId', ''); }}
+                onValueChange={(v) => {
+                  set('teamId', v);
+                  set('assigneeId', '');
+                  const filtered = projects.filter((p) => p.teamId === v);
+                  set('projectId', filtered.length === 1 ? filtered[0].projectId : '');
+                }}
                 placeholder="Select team"
                 options={teams.map((t) => ({ value: t.teamId, label: t.name }))}
                 error={errors.teamId}
               />
               <Select
                 label="Assignee"
+                required
                 value={form.assigneeId}
                 onValueChange={(v) => set('assigneeId', v)}
-                placeholder="Unassigned"
+                placeholder="Select assignee"
                 options={assignableUsers.map((u) => ({ value: u.userId, label: u.name || u.email }))}
+                error={errors.assigneeId}
                 disabled={!form.teamId}
               />
             </div>
 
-            {projects.length > 0 && (
-              <Select
-                label="Project"
-                value={form.projectId}
-                onValueChange={(v) => set('projectId', v)}
-                placeholder="No project"
-                options={projects.map((p) => ({ value: p.projectId, label: p.title }))}
-              />
-            )}
+            <Select
+              label="Project"
+              required
+              value={form.projectId}
+              onValueChange={(v) => set('projectId', v)}
+              placeholder="Select project"
+              options={teamProjects.map((p) => ({ value: p.projectId, label: p.name }))}
+              error={errors.projectId}
+              disabled={!form.teamId}
+            />
 
             <Input
               label="Deadline"
               type="date"
+              required
               value={form.deadline}
               onChange={(e) => set('deadline', e.target.value)}
+              error={errors.deadline}
             />
 
             <div className="flex justify-end gap-2 pt-2 border-t border-[var(--border-subtle)]">

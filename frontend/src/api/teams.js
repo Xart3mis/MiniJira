@@ -15,4 +15,10 @@ export const teamsApi = {
 
   delete: (id) =>
     client.delete(`/api/teams/${id}`).then((r) => r.data),
+
+  addMember: (teamId, userId) =>
+    client.post(`/api/teams/${teamId}/members`, { userId }).then((r) => r.data),
+
+  removeMember: (teamId, userId) =>
+    client.delete(`/api/teams/${teamId}/members/${userId}`).then((r) => r.data),
 };

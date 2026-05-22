@@ -31,17 +31,16 @@ export default function FileUpload({ taskId, currentImageUrl }) {
     setProgress(0);
 
     try {
-      const { presignedUrl, imageKey } = await uploadApi.getPresignedUrl({
+      const { uploadUrl, imageUrl: finalImageUrl } = await uploadApi.getPresignedUrl({
         taskId,
-        fileName: file.name,
-        fileType: file.type,
+        filename: file.name,
+        contentType: file.type,
       });
 
-      await uploadApi.uploadToS3(presignedUrl, file, setProgress);
+      await uploadApi.uploadToS3(uploadUrl, file, setProgress);
 
-      const imageUrl = presignedUrl.split('?')[0];
       updateTask.mutate(
-        { id: taskId, data: { imageUrl } },
+        { id: taskId, data: { imageUrl: finalImageUrl } },
         {
           onSuccess: () => {
             setStatus('done');

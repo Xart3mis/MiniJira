@@ -3,6 +3,7 @@ import { Plus, X } from '@phosphor-icons/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTeams, useCreateTeam, useUpdateTeam } from '../hooks/useTeams';
 import TeamTable from '../components/teams/TeamTable';
+import TeamMembersModal from '../components/teams/TeamMembersModal';
 import Input, { Textarea } from '../components/ui/Input';
 import Button from '../components/ui/Button';
 
@@ -73,9 +74,12 @@ export default function TeamsPage() {
   const { data: teams = [], isLoading } = useTeams();
   const [formOpen, setFormOpen] = useState(false);
   const [editTeam, setEditTeam] = useState(null);
+  const [membersTeam, setMembersTeam] = useState(null);
 
   const handleEdit = (team) => { setEditTeam(team); setFormOpen(true); };
   const handleClose = () => { setFormOpen(false); setEditTeam(null); };
+  const handleManageMembers = (team) => setMembersTeam(team);
+  const handleCloseMembers = () => setMembersTeam(null);
 
   return (
     <div className="px-6 py-6 max-w-[900px] mx-auto">
@@ -123,7 +127,16 @@ export default function TeamsPage() {
         )}
       </AnimatePresence>
 
-      <TeamTable teams={teams} isLoading={isLoading} onEdit={handleEdit} />
+      <TeamTable
+        teams={teams}
+        isLoading={isLoading}
+        onEdit={handleEdit}
+        onManageMembers={handleManageMembers}
+      />
+
+      {membersTeam && (
+        <TeamMembersModal team={membersTeam} onClose={handleCloseMembers} />
+      )}
     </div>
   );
 }

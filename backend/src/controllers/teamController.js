@@ -180,7 +180,7 @@ export async function addMember(req, res, next) {
             });
         }
 
-        if (user.role !== 'Employee') {
+        if (user.role?.toLowerCase() !== 'employee') {
             return res.status(400).json({
                 success: false,
                 message: 'Only Employee users can be added as team members'

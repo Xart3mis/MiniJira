@@ -2,7 +2,9 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Eye, EyeSlash, Kanban, CheckCircle } from '@phosphor-icons/react';
-import { signUp, confirmSignUp } from '../auth/cognito';
+import { signUp, confirmSignUp, signIn } from '../auth/cognito';
+import { usersApi } from '../api/users';
+import useAuthStore from '../store/authStore';
 import Input from '../components/ui/Input';
 import { Select } from '../components/ui/Select';
 import Button from '../components/ui/Button';
@@ -15,6 +17,7 @@ const ROLES = [
 
 export default function SignUpPage() {
   const navigate = useNavigate();
+  const setAuth = useAuthStore((s) => s.setAuth);
   const [step, setStep] = useState('register');
   const [form, setForm] = useState({
     name: '', email: '', password: '', confirmPassword: '',
@@ -71,7 +74,11 @@ export default function SignUpPage() {
     setLoading(true);
     try {
       await confirmSignUp(form.email, code.trim());
-      setStep('success');
+      // Auto sign-in so we can bootstrap the DynamoDB record immediately
+      const result = await signIn(form.email, form.password);
+      setAuth(result.idToken);
+      try { await usersApi.getMe(); } catch {}
+      navigate('/dashboard');
     } catch (err) {
       setServerError(err.message || 'Verification failed. Check your code.');
     } finally {
@@ -82,7 +89,7 @@ export default function SignUpPage() {
   return (
     <div
       className="min-h-[100dvh] flex items-center justify-center px-4 py-16 relative"
-      style={{ background: '#020306' }}
+      style={{ background: '#111218' }}
     >
       <div
         className="absolute inset-0 pointer-events-none"
@@ -169,10 +176,10 @@ export default function SignUpPage() {
               />
               <Input
                 label="Team ID"
-                placeholder="Optional — ask your manager"
+                placeholder="Paste the UUID from the Teams page"
                 value={form.teamId}
                 onChange={(e) => set('teamId', e.target.value)}
-                helper="You can join a team after sign-up"
+                helper="Ask your manager to copy it from the Teams page"
               />
 
               {serverError && (

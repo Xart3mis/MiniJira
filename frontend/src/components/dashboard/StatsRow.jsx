@@ -14,8 +14,8 @@ function Stat({ label, value, sub, accent }) {
       >
         {value}
       </span>
-      <span className="text-xs text-brand-silver/45 leading-none">{label}</span>
-      {sub && <span className="text-[10px] text-brand-silver/25 font-mono mt-0.5">{sub}</span>}
+      <span className="text-xs text-brand-silver/70 leading-none">{label}</span>
+      {sub && <span className="text-[10px] text-brand-silver/60 font-mono mt-0.5">{sub}</span>}
     </div>
   );
 }

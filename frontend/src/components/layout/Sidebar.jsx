@@ -14,7 +14,7 @@ import { signOut } from '../../auth/cognito';
 const NAV = [
   { label: 'Dashboard', path: '/dashboard', icon: SquaresFour },
   { label: 'Kanban', path: '/kanban', icon: Kanban },
-  { label: 'My Tasks', path: '/my-tasks', icon: ListChecks },
+  { label: 'Tasks', path: '/my-tasks', icon: ListChecks },
   { label: 'Projects', path: '/projects', icon: FolderOpen },
   { label: 'Analytics', path: '/analytics', icon: ChartBar, managerOnly: true },
   { label: 'Teams', path: '/teams', icon: UsersThree, managerOnly: true },
@@ -32,7 +32,7 @@ function NavItem({ icon: Icon, label, path, collapsed }) {
             'group relative',
             isActive
               ? 'bg-[var(--accent-rose-muted)] text-brand-rose'
-              : 'text-brand-silver/45 hover:text-brand-silver/80 hover:bg-brand-elevated/60'
+              : 'text-brand-silver/65 hover:text-brand-silver/90 hover:bg-brand-elevated/60'
           )
         }
       >
@@ -115,7 +115,7 @@ export default function Sidebar() {
             onClick={handleSignOut}
             className={cn(
               'flex items-center gap-3 w-full px-3 py-2 rounded-md text-sm',
-              'text-brand-silver/35 hover:text-brand-rose hover:bg-[var(--accent-rose-muted)] transition-colors duration-150'
+              'text-brand-silver/60 hover:text-brand-rose hover:bg-[var(--accent-rose-muted)] transition-colors duration-150'
             )}
           >
             <SignOut size={17} className="shrink-0" />
@@ -151,10 +151,10 @@ export default function Sidebar() {
                 transition={{ duration: 0.2 }}
                 className="overflow-hidden min-w-0"
               >
-                <p className="text-xs font-medium text-brand-silver/70 truncate leading-none mb-0.5">
+                <p className="text-xs font-medium text-brand-silver/85 truncate leading-none mb-0.5">
                   {user?.name ?? user?.email}
                 </p>
-                <p className="text-[10px] text-brand-silver/35 truncate leading-none">
+                <p className="text-[10px] text-brand-silver/60 truncate leading-none">
                   {user?.role}
                 </p>
               </motion.div>
@@ -165,7 +165,7 @@ export default function Sidebar() {
         <Tooltip content={collapsed ? 'Expand sidebar' : 'Collapse sidebar'} side="right">
           <button
             onClick={toggleSidebar}
-            className="flex items-center justify-center w-full h-7 rounded-md text-brand-silver/25 hover:text-brand-silver/50 hover:bg-brand-elevated/50 transition-colors duration-150"
+            className="flex items-center justify-center w-full h-7 rounded-md text-brand-silver/50 hover:text-brand-silver/75 hover:bg-brand-elevated/50 transition-colors duration-150"
             aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
             {collapsed ? <ArrowLineRight size={14} /> : <ArrowLineLeft size={14} />}

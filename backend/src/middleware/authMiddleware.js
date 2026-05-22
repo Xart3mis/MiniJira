@@ -66,11 +66,17 @@ export async function authenticateToken(req, res, next) {
     });
 
     // Attach user info to request
+    let role = verified['custom:role'] || 'Employee';
+    // Normalize role to PascalCase (e.g., 'manager' -> 'Manager')
+    if (role.toLowerCase() === 'manager') role = 'Manager';
+    if (role.toLowerCase() === 'employee') role = 'Employee';
+    if (role.toLowerCase() === 'admin') role = 'Admin';
+
     req.user = {
       userId: verified.sub,
       email: verified.email,
       name: verified.name || verified.email,
-      role: verified['custom:role'] || 'Employee',
+      role: role,
       teamId: verified['custom:teamId'] || null,
       tokenExpiry: verified.exp
     };

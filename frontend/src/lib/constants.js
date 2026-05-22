@@ -9,28 +9,28 @@ export const STATUS_LABELS = {
 
 export const STATUS_COLORS = {
   ToDo: {
-    dot: 'bg-brand-silver/40',
-    badge: 'bg-[rgba(188,186,187,0.1)] text-brand-silver/70',
-    border: 'border-[rgba(188,186,187,0.15)]',
-    column: 'rgba(188,186,187,0.06)',
+    dot: 'bg-brand-silver/50',
+    badge: 'bg-brand-overlay text-brand-silver/90',
+    border: 'border-brand-highlight',
+    column: 'rgba(209,209,214,0.04)',
   },
   InProgress: {
     dot: 'bg-brand-rose',
     badge: 'bg-[var(--accent-rose-muted)] text-brand-rose',
     border: 'border-[var(--accent-rose-border)]',
-    column: 'rgba(144,78,85,0.04)',
+    column: 'rgba(191,109,117,0.04)',
   },
   InReview: {
-    dot: 'bg-[#7a5a6e]',
-    badge: 'bg-[rgba(122,90,110,0.12)] text-[#b09ab0]',
-    border: 'border-[rgba(122,90,110,0.25)]',
-    column: 'rgba(122,90,110,0.04)',
+    dot: 'bg-[#9c8191]',
+    badge: 'bg-[rgba(156,129,145,0.15)] text-[#d1b8c6]',
+    border: 'border-[rgba(156,129,145,0.3)]',
+    column: 'rgba(156,129,145,0.04)',
   },
   Done: {
     dot: 'bg-brand-teal',
     badge: 'bg-[var(--accent-teal-muted)] text-brand-teal',
     border: 'border-[var(--accent-teal-border)]',
-    column: 'rgba(37,106,105,0.04)',
+    column: 'rgba(54,140,138,0.04)',
   },
 };
 
@@ -43,8 +43,8 @@ export const PRIORITY_COLORS = {
     label: 'High',
   },
   Medium: {
-    dot: 'bg-brand-silver/50',
-    badge: 'bg-[rgba(188,186,187,0.08)] text-brand-silver/60',
+    dot: 'bg-brand-silver/60',
+    badge: 'bg-brand-overlay text-brand-silver/80',
     label: 'Medium',
   },
   Low: {
