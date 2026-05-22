@@ -1,0 +1,108 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-base: #020306;
+  --bg-raised: #0a0b12;
+  --bg-overlay: #131420;
+  --bg-elevated: #1a1b2c;
+  --bg-highlight: #21222f;
+
+  --text-primary: #bcbabb;
+  --text-secondary: rgba(188, 186, 187, 0.62);
+  --text-tertiary: rgba(188, 186, 187, 0.36);
+
+  --border-subtle: rgba(188, 186, 187, 0.06);
+  --border-default: rgba(188, 186, 187, 0.11);
+  --border-strong: rgba(188, 186, 187, 0.22);
+
+  --accent-rose: #904e55;
+  --accent-rose-hover: #a05860;
+  --accent-rose-muted: rgba(144, 78, 85, 0.13);
+  --accent-rose-border: rgba(144, 78, 85, 0.28);
+
+  --accent-teal: #256a69;
+  --accent-teal-hover: #2c7d7c;
+  --accent-teal-muted: rgba(37, 106, 105, 0.13);
+  --accent-teal-border: rgba(37, 106, 105, 0.28);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  font-family: 'DM Sans', system-ui, sans-serif;
+  line-height: 1.5;
+  min-height: 100dvh;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(188, 186, 187, 0.14);
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(188, 186, 187, 0.26);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-rose);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Shimmer utility */
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(188, 186, 187, 0.04) 0%,
+    rgba(188, 186, 187, 0.1) 50%,
+    rgba(188, 186, 187, 0.04) 100%
+  );
+  background-size: 400px 100%;
+  animation: shimmer 1.8s infinite linear;
+}
+
+/* Smooth drag overlay */
+[data-dnd-overlay] {
+  cursor: grabbing !important;
+}
+
+/* Radix Dialog overlay */
+[data-radix-dialog-overlay] {
+  backdrop-filter: blur(4px);
+}
+
+/* Remove number input arrows */
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
