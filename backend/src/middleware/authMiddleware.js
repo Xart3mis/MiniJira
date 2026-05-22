@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import fetch from 'node-fetch';
 import jwkToPem from 'jwk-to-pem';
 
 const COGNITO_REGION = process.env.COGNITO_REGION || 'us-east-1';
@@ -84,6 +85,7 @@ export async function authenticateToken(req, res, next) {
     });
   }
 }
+
 
 // Role-based access control middleware
 export function requireRole(...roles) {
