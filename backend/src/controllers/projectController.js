@@ -78,11 +78,7 @@ export async function getProjects(req, res, next) {
             projects = await scanTable(PROJECTS_TABLE);
         } else {
             if (!userTeamId) {
-                return res.status(403).json({
-                    success: false,
-                    error: 'Forbidden',
-                    message: 'No team assigned to this user'
-                });
+                return res.json({ success: true, count: 0, data: [] });
             }
             projects = await queryByIndex(PROJECTS_TABLE, 'teamId-index', 'teamId', userTeamId);
         }

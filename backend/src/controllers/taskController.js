@@ -228,10 +228,7 @@ export async function getTasks(req, res, next) {
             tasks = await scanTable(TASKS_TABLE);
         } else {
             if (!teamId) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'teamId is required for employee task filtering'
-                });
+                return res.json({ success: true, count: 0, data: [] });
             }
 
             tasks = await queryByIndex(
