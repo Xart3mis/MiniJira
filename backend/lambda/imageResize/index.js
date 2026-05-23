@@ -18,6 +18,13 @@ async function streamToBuffer(stream) {
 }
 
 export async function handler(event) {
+    console.log('Event received:', JSON.stringify(event, null, 2));
+
+    if (!RESIZED_BUCKET) {
+        console.error('S3_RESIZED_BUCKET environment variable is not set');
+        throw new Error('S3_RESIZED_BUCKET environment variable is not set');
+    }
+
     for (const record of event.Records) {
         const sourceBucket = record.s3.bucket.name;
         const sourceKey = decodeURIComponent(record.s3.object.key.replace(/\+/g, ' '));

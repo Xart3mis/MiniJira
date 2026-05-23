@@ -41,8 +41,11 @@ export async function getPresignedUploadUrl(req, res, next) {
         });
 
         // The resized version will be written here by the imageResize Lambda
+        const region = s3.config.region || process.env.AWS_REGION || 'us-east-1';
         const resizedKey = key.replace('originals/', 'resized/');
-        const imageUrl = `https://${RESIZED_BUCKET}.s3.eu-north-1.amazonaws.com/${resizedKey}`;
+        
+        // Use a more robust URL format that works across regions
+        const imageUrl = `https://${RESIZED_BUCKET}.s3.${region}.amazonaws.com/${resizedKey}`;
 
         res.json({
             success: true,

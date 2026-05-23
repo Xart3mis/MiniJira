@@ -205,15 +205,21 @@ export default function TaskPanel() {
                 </span>
               </div>
 
-              {projects.length > 0 && (
+              {isManager ? (
                 <Select
                   label="Project"
                   value={task.projectId ?? ''}
                   onValueChange={(v) => handleField('projectId', v)}
                   placeholder="No project"
-                  options={projects.map((p) => ({ value: p.projectId, label: p.title }))}
-                  disabled={!isManager}
+                  options={projects.map((p) => ({ value: p.projectId, label: p.name }))}
                 />
+              ) : (
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-brand-silver/40 uppercase tracking-wide">Project</span>
+                  <span className="text-xs text-brand-silver/60">
+                    {projects.find((p) => p.projectId === task.projectId)?.name ?? 'None'}
+                  </span>
+                </div>
               )}
             </div>
 
