@@ -23,7 +23,7 @@ const useAuthStore = create(
           email: payload?.email ?? '',
           name: payload?.name ?? payload?.email ?? '',
           role: role,
-          teamId: payload?.['custom:teamId'] ?? null,
+          teamId: payload?.['custom:teamid'] ?? null,
         };
         set({ user, token, isAuthenticated: true });
         setApiAuth({
