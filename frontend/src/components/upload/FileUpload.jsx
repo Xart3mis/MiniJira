@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { UploadSimple, CheckCircle, XCircle, Image as ImageIcon } from '@phosphor-icons/react';
+import { motion } from 'framer-motion';
+import { UploadSimple, CheckCircle, XCircle, CircleNotch } from '@phosphor-icons/react';
 import { uploadApi } from '../../api/upload';
 import { useUpdateTask } from '../../hooks/useTasks';
 import { cn } from '../../lib/utils';
@@ -38,6 +38,16 @@ export default function FileUpload({ taskId, currentImageUrl }) {
       });
 
       await uploadApi.uploadToS3(uploadUrl, file, setProgress);
+
+      setStatus('processing');
+
+      try {
+        await uploadApi.pollForResizedImage(finalImageUrl);
+      } catch {
+        setStatus('error');
+        toast.error('Image processing timed out — please try again');
+        return;
+      }
 
       updateTask.mutate(
         { id: taskId, data: { imageUrl: finalImageUrl } },
@@ -83,7 +93,7 @@ export default function FileUpload({ taskId, currentImageUrl }) {
           dragOver
             ? 'border-brand-rose bg-[var(--accent-rose-muted)]'
             : 'border-[var(--border-default)] hover:border-[var(--border-strong)] hover:bg-brand-elevated/50',
-          status === 'uploading' && 'cursor-default pointer-events-none'
+          (status === 'uploading' || status === 'processing') && 'cursor-default pointer-events-none'
         )}
       >
         <input
@@ -115,6 +125,13 @@ export default function FileUpload({ taskId, currentImageUrl }) {
               />
             </div>
             <p className="text-xs text-brand-silver/40 text-center font-mono">{progress}%</p>
+          </div>
+        )}
+
+        {status === 'processing' && (
+          <div className="flex flex-col items-center gap-2">
+            <CircleNotch size={20} className="text-brand-rose/70 animate-spin" />
+            <p className="text-xs text-brand-silver/40 text-center">Processing image…</p>
           </div>
         )}
 

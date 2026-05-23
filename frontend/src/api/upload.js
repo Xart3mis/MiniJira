@@ -14,4 +14,25 @@ export const uploadApi = {
         }
       },
     }),
+
+  pollForResizedImage: (imageUrl, { timeoutMs = 30000, intervalMs = 2000 } = {}) =>
+    new Promise((resolve, reject) => {
+      const deadline = Date.now() + timeoutMs;
+
+      const check = () => {
+        const img = new Image();
+        img.onload = () => resolve();
+        img.onerror = () => {
+          if (Date.now() >= deadline) {
+            reject(new Error('Image processing timed out'));
+            return;
+          }
+          setTimeout(check, intervalMs);
+        };
+        // cache-bust so the browser re-fetches each poll
+        img.src = `${imageUrl}?_t=${Date.now()}`;
+      };
+
+      check();
+    }),
 };
