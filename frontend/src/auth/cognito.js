@@ -94,7 +94,7 @@ export async function signUp(email, password, { name, role, teamId }) {
     { Name: 'name', Value: name },
     { Name: 'custom:role', Value: role },
   ];
-  if (teamId) UserAttributes.push({ Name: 'custom:teamId', Value: teamId });
+  if (teamId) UserAttributes.push({ Name: 'custom:teamid', Value: teamId });
 
   const body = { ClientId: CLIENT_ID, Username: email, Password: password, UserAttributes };
   if (SecretHash) body.SecretHash = SecretHash;

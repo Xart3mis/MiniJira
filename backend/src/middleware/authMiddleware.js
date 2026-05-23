@@ -77,7 +77,7 @@ export async function authenticateToken(req, res, next) {
       email: verified.email,
       name: verified.name || verified.email,
       role: role,
-      teamId: verified['custom:teamId'] || null,
+      teamId: verified['custom:teamid'] || null,
       tokenExpiry: verified.exp
     };
 
