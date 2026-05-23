@@ -6,11 +6,28 @@ import {
     updateItem,
     deleteItem
 } from '../services/dynamoService.js';
+import { cognitoISP } from '../config/aws.js';
 
 const TEAMS_TABLE = process.env.DYNAMODB_TEAMS_TABLE;
 const USERS_TABLE = process.env.DYNAMODB_USERS_TABLE;
 const PROJECTS_TABLE = process.env.DYNAMODB_PROJECTS_TABLE;
 const TASKS_TABLE = process.env.DYNAMODB_TASKS_TABLE;
+const COGNITO_USER_POOL_ID = process.env.COGNITO_USER_POOL_ID;
+
+async function syncCognitoTeamId(userEmail, teamId) {
+    if (!COGNITO_USER_POOL_ID || !userEmail) return;
+    try {
+        await cognitoISP.adminUpdateUserAttributes({
+            UserPoolId: COGNITO_USER_POOL_ID,
+            Username: userEmail,
+            UserAttributes: [
+                { Name: 'custom:teamid', Value: teamId || '' }
+            ]
+        }).promise();
+    } catch (err) {
+        console.error('Cognito teamId sync failed (non-fatal):', err.message);
+    }
+}
 
 export async function createTeam(req, res, next) {
     try {
@@ -225,6 +242,8 @@ export async function addMember(req, res, next) {
             }
         );
 
+        await syncCognitoTeamId(user.email, req.params.id);
+
         res.json({
             success: true,
             message: 'Member added successfully',
@@ -256,6 +275,8 @@ export async function removeMember(req, res, next) {
             });
         }
 
+        const memberUser = await getItem(USERS_TABLE, { userId });
+
         const updatedMembers = members.filter((id) => id !== userId);
 
         await updateItem(
@@ -277,6 +298,8 @@ export async function removeMember(req, res, next) {
                 ':updatedAt': new Date().toISOString()
             }
         );
+
+        await syncCognitoTeamId(memberUser?.email, '');
 
         res.json({
             success: true,

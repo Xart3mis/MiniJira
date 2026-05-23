@@ -74,12 +74,17 @@ export default function TeamsPage() {
   const { data: teams = [], isLoading } = useTeams();
   const [formOpen, setFormOpen] = useState(false);
   const [editTeam, setEditTeam] = useState(null);
-  const [membersTeam, setMembersTeam] = useState(null);
+  const [membersTeamId, setMembersTeamId] = useState(null);
+
+  // Derive from live query data so optimistic updates flow through instantly
+  const membersTeam = membersTeamId
+    ? (teams.find((t) => t.teamId === membersTeamId) ?? null)
+    : null;
 
   const handleEdit = (team) => { setEditTeam(team); setFormOpen(true); };
   const handleClose = () => { setFormOpen(false); setEditTeam(null); };
-  const handleManageMembers = (team) => setMembersTeam(team);
-  const handleCloseMembers = () => setMembersTeam(null);
+  const handleManageMembers = (team) => setMembersTeamId(team.teamId);
+  const handleCloseMembers = () => setMembersTeamId(null);
 
   return (
     <div className="px-6 py-6 max-w-[900px] mx-auto">

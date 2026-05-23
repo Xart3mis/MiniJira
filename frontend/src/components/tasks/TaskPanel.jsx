@@ -4,6 +4,7 @@ import { X, Trash, PencilSimple, Check } from '@phosphor-icons/react';
 import { useTask, useUpdateTask, useDeleteTask } from '../../hooks/useTasks';
 import { useUsers } from '../../hooks/useUsers';
 import { useProjects } from '../../hooks/useProjects';
+import { useTeams } from '../../hooks/useTeams';
 import { StatusBadge, PriorityBadge } from '../ui/Badge';
 import { Select } from '../ui/Select';
 import Avatar from '../ui/Avatar';
@@ -30,6 +31,7 @@ export default function TaskPanel() {
 
   const { data: users = [] } = useUsers();
   const { data: projects = [] } = useProjects();
+  const { data: teams = [] } = useTeams();
 
   const [tab, setTab] = useState('Details');
   const [editingTitle, setEditingTitle] = useState(false);
@@ -258,7 +260,7 @@ export default function TaskPanel() {
               {tab === 'Details' && (
                 <div className="space-y-2">
                   <DetailRow label="Task ID" value={task.taskId?.slice(0, 8)} mono />
-                  <DetailRow label="Team" value={task.teamId} />
+                  <DetailRow label="Team" value={(() => { const t = teams.find(t => t.teamId === task.teamId); return t ? `${t.name} · ${task.teamId?.slice(0, 8)}` : task.teamId; })()} />
                   <DetailRow label="Created" value={formatDate(task.createdAt)} mono />
                   <DetailRow label="Updated" value={formatDate(task.updatedAt)} mono />
                 </div>

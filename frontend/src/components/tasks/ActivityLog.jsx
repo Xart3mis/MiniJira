@@ -1,4 +1,5 @@
 import { useTaskActivity } from '../../hooks/useTasks';
+import { useUsers } from '../../hooks/useUsers';
 import { SkeletonRow } from '../ui/Skeleton';
 import { StatusBadge } from '../ui/Badge';
 import Avatar from '../ui/Avatar';
@@ -7,6 +8,7 @@ import { ArrowRight } from '@phosphor-icons/react';
 
 export default function ActivityLog({ taskId }) {
   const { data: activity = [], isLoading } = useTaskActivity(taskId);
+  const { data: users = [] } = useUsers();
 
   if (isLoading) {
     return (
@@ -26,10 +28,10 @@ export default function ActivityLog({ taskId }) {
     <div className="space-y-0.5">
       {activity.map((entry, i) => (
         <div key={i} className="flex items-start gap-2.5 py-2">
-          <Avatar name={entry.userId} size="xs" className="mt-0.5 shrink-0" />
+          <Avatar name={users.find(u => u.userId === entry.userId)?.name ?? entry.userId} size="xs" className="mt-0.5 shrink-0" />
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="text-xs text-brand-silver/85 font-medium">{entry.userId}</span>
+              <span className="text-xs text-brand-silver/85 font-medium">{users.find(u => u.userId === entry.userId)?.name ?? entry.userId}</span>
               <span className="text-xs text-brand-silver/60">moved</span>
               <StatusBadge status={entry.oldStatus} />
               <ArrowRight size={10} className="text-brand-silver/60" />

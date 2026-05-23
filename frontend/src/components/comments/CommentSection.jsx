@@ -27,8 +27,8 @@ export default function CommentSection({ taskId }) {
       const optimistic = {
         commentId: `optimistic-${Date.now()}`,
         text: body,
-        authorId: user?.userId,
-        authorName: user?.name ?? user?.email,
+        userId: user?.userId,
+        userName: user?.name ?? user?.email,
         createdAt: new Date().toISOString(),
       };
       qc.setQueryData(['comments', taskId], (old = []) => [...old, optimistic]);
@@ -65,11 +65,11 @@ export default function CommentSection({ taskId }) {
         <div className="space-y-3">
           {comments.map((c) => (
             <div key={c.commentId} className="flex items-start gap-2.5">
-              <Avatar name={c.authorName ?? c.authorId} size="sm" className="shrink-0 mt-0.5" />
+              <Avatar name={c.userName ?? c.userId} size="sm" className="shrink-0 mt-0.5" />
               <div className="flex-1 min-w-0">
                 <div className="flex items-baseline gap-2 mb-0.5">
                   <span className="text-xs font-medium text-brand-silver/70">
-                    {c.authorName ?? c.authorId}
+                    {c.userName ?? c.userId}
                   </span>
                   <span className="text-[10px] text-brand-silver/25 font-mono">
                     {formatRelative(c.createdAt)}

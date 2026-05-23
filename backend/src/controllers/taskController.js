@@ -21,34 +21,34 @@ async function validateTaskRelations({ teamId, projectId, assigneeId }) {
     const team = await getItem(TEAMS_TABLE, { teamId });
 
     if (!team) {
-        return 'Invalid teamId. Team does not exist.';
+        return { error: 'Invalid teamId. Team does not exist.' };
     }
 
     const project = await getItem(PROJECTS_TABLE, { projectId });
 
     if (!project) {
-        return 'Invalid projectId. Project does not exist.';
+        return { error: 'Invalid projectId. Project does not exist.' };
     }
 
     if (project.teamId !== teamId) {
-        return 'Project does not belong to the selected team.';
+        return { error: 'Project does not belong to the selected team.' };
     }
 
     const assignee = await getItem(USERS_TABLE, { userId: assigneeId });
 
     if (!assignee) {
-        return 'Invalid assigneeId. User does not exist.';
+        return { error: 'Invalid assigneeId. User does not exist.' };
     }
 
     if (assignee.role?.toLowerCase() !== 'employee') {
-        return 'Task assignee must be an Employee.';
+        return { error: 'Task assignee must be an Employee.' };
     }
 
     if (assignee.teamId !== teamId) {
-        return 'Assignee does not belong to the selected team.';
+        return { error: 'Assignee does not belong to the selected team.' };
     }
 
-    return null;
+    return { error: null, assignee };
 }
 
 const ALLOWED_PRIORITIES = ['Low', 'Medium', 'High', 'Critical'];
@@ -160,7 +160,7 @@ export async function createTask(req, res, next) {
             });
         }
 
-        const relationError = await validateTaskRelations({
+        const { error: relationError, assignee } = await validateTaskRelations({
             teamId,
             projectId,
             assigneeId
@@ -183,8 +183,8 @@ export async function createTask(req, res, next) {
             priority,
             deadline,
             assigneeId,
-            assigneeEmail: assigneeEmail || '',
-            assigneeName: assigneeName || '',
+            assigneeEmail: assignee.email || assigneeEmail || '',
+            assigneeName: assignee.name || assigneeName || '',
             teamId,
             projectId: projectId || '',
             imageUrl: imageUrl || null,
@@ -224,19 +224,29 @@ export async function getTasks(req, res, next) {
         const role = req.user.role;
         const teamId = req.user.teamId;
 
+        const filterTeamId = req.query.teamId;
+        const filterPriority = req.query.priority;
+        const filterAssigneeId = req.query.assigneeId;
+
         if (role === 'Manager' || role === 'Admin') {
             tasks = await scanTable(TASKS_TABLE);
+            if (filterTeamId) {
+                tasks = tasks.filter((t) => t.teamId === filterTeamId);
+            }
         } else {
             if (!teamId) {
                 return res.json({ success: true, count: 0, data: [] });
             }
 
-            tasks = await queryByIndex(
-                TASKS_TABLE,
-                'teamId-index',
-                'teamId',
-                teamId
-            );
+            tasks = await scanTable(TASKS_TABLE);
+            tasks = tasks.filter((t) => t.teamId === teamId);
+        }
+
+        if (filterPriority) {
+            tasks = tasks.filter((t) => t.priority === filterPriority);
+        }
+        if (filterAssigneeId) {
+            tasks = tasks.filter((t) => t.assigneeId === filterAssigneeId);
         }
 
         res.json({
@@ -325,8 +335,6 @@ export async function updateTask(req, res, next) {
         const finalPriority = isEmployee ? task.priority : (priority ?? task.priority);
         const finalDeadline = isEmployee ? task.deadline : (deadline ?? task.deadline);
         const finalAssigneeId = isEmployee ? task.assigneeId : (assigneeId ?? task.assigneeId);
-        const finalAssigneeEmail = isEmployee ? task.assigneeEmail : (assigneeEmail ?? task.assigneeEmail);
-        const finalAssigneeName = isEmployee ? task.assigneeName : (assigneeName ?? task.assigneeName);
         const finalTeamId = isEmployee ? task.teamId : (teamId ?? task.teamId);
         const finalProjectId = isEmployee ? task.projectId : (projectId ?? task.projectId);
         const finalImageUrl = isEmployee ? task.imageUrl : (imageUrl ?? task.imageUrl);
@@ -346,7 +354,7 @@ export async function updateTask(req, res, next) {
             });
         }
 
-        const relationError = await validateTaskRelations({
+        const { error: relationError, assignee: resolvedAssignee } = await validateTaskRelations({
             teamId: finalTeamId,
             projectId: finalProjectId,
             assigneeId: finalAssigneeId
@@ -358,6 +366,13 @@ export async function updateTask(req, res, next) {
                 message: relationError
             });
         }
+
+        const finalAssigneeEmail = isEmployee
+            ? task.assigneeEmail
+            : (resolvedAssignee.email || assigneeEmail || task.assigneeEmail);
+        const finalAssigneeName = isEmployee
+            ? task.assigneeName
+            : (resolvedAssignee.name || assigneeName || task.assigneeName);
 
         const now = new Date().toISOString();
         const auditLog = task.auditLog || [];

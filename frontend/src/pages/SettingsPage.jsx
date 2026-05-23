@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useMe, useUpdateMe } from '../hooks/useUsers';
 import { useUsers } from '../hooks/useUsers';
+import { useTeams } from '../hooks/useTeams';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
 import Avatar from '../components/ui/Avatar';
@@ -12,6 +13,8 @@ export default function SettingsPage() {
   const { user, updateUser } = useAuthStore();
   const { data: me, isLoading } = useMe();
   const updateMe = useUpdateMe();
+  const { data: teams = [] } = useTeams();
+  const myTeam = teams.find((t) => t.teamId === user?.teamId);
 
   const [form, setForm] = useState({ name: user?.name ?? '' });
   const [saved, setSaved] = useState(false);
@@ -54,7 +57,9 @@ export default function SettingsPage() {
                     {user?.role}
                   </Badge>
                   {user?.teamId && (
-                    <Badge variant="teal">Team: {user.teamId.slice(0, 8)}</Badge>
+                    <Badge variant="teal">
+                      {myTeam ? `${myTeam.name} · ${user.teamId.slice(0, 8)}` : user.teamId.slice(0, 8)}
+                    </Badge>
                   )}
                 </div>
               </>

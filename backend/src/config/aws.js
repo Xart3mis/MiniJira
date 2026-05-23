@@ -16,10 +16,12 @@ const s3 = new AWS.S3({
 });
 const sns = new AWS.SNS();
 const cloudwatch = new AWS.CloudWatch();
+const cognitoISP = new AWS.CognitoIdentityServiceProvider();
 
 export {
     dynamoDB,
     s3,
     sns,
-    cloudwatch
+    cloudwatch,
+    cognitoISP
 };

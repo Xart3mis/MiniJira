@@ -8,16 +8,22 @@ import { Select } from '../components/ui/Select';
 import useAuthStore from '../store/authStore';
 import useUiStore from '../store/uiStore';
 import { formatDate, isOverdue, cn } from '../lib/utils';
-import { ListChecks, CalendarBlank } from '@phosphor-icons/react';
+import { ListChecks, CalendarBlank, Plus } from '@phosphor-icons/react';
+import Button from '../components/ui/Button';
 import { STATUSES, STATUS_LABELS } from '../lib/constants';
 
 export default function MyTasksPage() {
   const { user } = useAuthStore();
   const openTaskPanel = useUiStore((s) => s.openTaskPanel);
+  const openCreateTask = useUiStore((s) => s.openCreateTask);
   const [statusFilter, setStatusFilter] = useState('');
 
+  const isManager = user?.role === 'Manager';
+
+  // Managers see all tasks (they can't be assigned tasks themselves).
+  // Employees see only tasks assigned to them.
   const { data: allTasks = [], isLoading } = useTasks(
-    user?.userId ? { assigneeId: user.userId } : {}
+    isManager ? {} : (user?.userId ? { assigneeId: user.userId } : {})
   );
 
   const tasks = statusFilter
@@ -29,8 +35,6 @@ export default function MyTasksPage() {
     return acc;
   }, {});
 
-  const isManager = user?.role === 'Manager';
-
   return (
     <div className="px-6 py-6 max-w-[900px] mx-auto">
       <div className="flex items-center justify-between mb-6">
@@ -38,7 +42,18 @@ export default function MyTasksPage() {
           <h1 className="text-lg font-semibold text-brand-silver">My Tasks</h1>
           <p className="text-sm text-brand-silver/35 mt-0.5">{allTasks.length} assigned{isManager ? "" : " to You"}</p>
         </div>
-        <div className="w-40">
+        <div className="flex items-center gap-2">
+          {isManager && (
+            <Button
+              variant="primary"
+              size="sm"
+              iconLeft={<Plus size={14} />}
+              onClick={openCreateTask}
+            >
+              New task
+            </Button>
+          )}
+          <div className="w-40">
           <Select
             value={statusFilter}
             onValueChange={setStatusFilter}
@@ -48,6 +63,7 @@ export default function MyTasksPage() {
               ...STATUSES.map((s) => ({ value: s, label: STATUS_LABELS[s] })),
             ]}
           />
+          </div>
         </div>
       </div>
 

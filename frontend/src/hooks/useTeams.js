@@ -64,13 +64,38 @@ export function useAddMember() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: ({ teamId, userId }) => teamsApi.addMember(teamId, userId),
+    onMutate: async ({ teamId, userId }) => {
+      await qc.cancelQueries({ queryKey: ['teams'] });
+      await qc.cancelQueries({ queryKey: ['users'] });
+
+      const prevTeams = qc.getQueryData(['teams']);
+      const prevUsers = qc.getQueryData(['users']);
+
+      qc.setQueryData(['teams'], (old = []) =>
+        old.map((t) =>
+          t.teamId === teamId
+            ? { ...t, members: [...(t.members || []), userId] }
+            : t
+        )
+      );
+
+      qc.setQueryData(['users'], (old = []) =>
+        old.map((u) => (u.userId === userId ? { ...u, teamId } : u))
+      );
+
+      return { prevTeams, prevUsers };
+    },
+    onError: (err, _vars, ctx) => {
+      if (ctx?.prevTeams !== undefined) qc.setQueryData(['teams'], ctx.prevTeams);
+      if (ctx?.prevUsers !== undefined) qc.setQueryData(['users'], ctx.prevUsers);
+      toast.error(err.response?.data?.message || 'Failed to add member');
+    },
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['teams'] });
-      qc.invalidateQueries({ queryKey: ['users'] });
       toast.success('Member added');
     },
-    onError: (err) => {
-      toast.error(err.response?.data?.message || 'Failed to add member');
+    onSettled: () => {
+      qc.invalidateQueries({ queryKey: ['teams'] });
+      qc.invalidateQueries({ queryKey: ['users'] });
     },
   });
 }
@@ -79,13 +104,38 @@ export function useRemoveMember() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: ({ teamId, userId }) => teamsApi.removeMember(teamId, userId),
+    onMutate: async ({ teamId, userId }) => {
+      await qc.cancelQueries({ queryKey: ['teams'] });
+      await qc.cancelQueries({ queryKey: ['users'] });
+
+      const prevTeams = qc.getQueryData(['teams']);
+      const prevUsers = qc.getQueryData(['users']);
+
+      qc.setQueryData(['teams'], (old = []) =>
+        old.map((t) =>
+          t.teamId === teamId
+            ? { ...t, members: (t.members || []).filter((id) => id !== userId) }
+            : t
+        )
+      );
+
+      qc.setQueryData(['users'], (old = []) =>
+        old.map((u) => (u.userId === userId ? { ...u, teamId: '' } : u))
+      );
+
+      return { prevTeams, prevUsers };
+    },
+    onError: (err, _vars, ctx) => {
+      if (ctx?.prevTeams !== undefined) qc.setQueryData(['teams'], ctx.prevTeams);
+      if (ctx?.prevUsers !== undefined) qc.setQueryData(['users'], ctx.prevUsers);
+      toast.error(err.response?.data?.message || 'Failed to remove member');
+    },
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['teams'] });
-      qc.invalidateQueries({ queryKey: ['users'] });
       toast.success('Member removed');
     },
-    onError: (err) => {
-      toast.error(err.response?.data?.message || 'Failed to remove member');
+    onSettled: () => {
+      qc.invalidateQueries({ queryKey: ['teams'] });
+      qc.invalidateQueries({ queryKey: ['users'] });
     },
   });
 }

@@ -83,7 +83,7 @@ export default function CommandPalette() {
                 </div>
               </div>
 
-              <Command.List className="max-h-[60vh] overflow-y-auto p-2">
+              <Command.List className="max-h-[60vh] overflow-y-auto p-2 space-y-0.5">
                 <Command.Empty className="py-12 text-center">
                   <div className="flex flex-col items-center gap-2">
                     <MagnifyingGlass size={32} weight="duotone" className="text-brand-silver/10" />
@@ -101,7 +101,7 @@ export default function CommandPalette() {
                   >
                     <Command.Item
                       onSelect={() => { openCreateTask(); closeCommandPalette(); }}
-                      className="group flex items-center gap-3 px-3 py-3 text-sm text-brand-silver/80 rounded-xl cursor-pointer data-[selected]:bg-white/[0.03] data-[selected]:text-brand-silver transition-all"
+                      className="group flex items-center gap-3 px-3 py-3 my-0.5 text-sm text-brand-silver/80 rounded-xl cursor-pointer data-[selected]:bg-white/[0.03] data-[selected]:text-brand-silver transition-all"
                     >
                       <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-brand-rose/10 group-data-[selected]:bg-brand-rose/20 transition-colors">
                         <Plus size={18} weight="bold" className="text-brand-rose" />
@@ -124,7 +124,7 @@ export default function CommandPalette() {
                       key={id}
                       value={label}
                       onSelect={() => { navigate(path); closeCommandPalette(); }}
-                      className="group flex items-center gap-3 px-3 py-3 text-sm text-brand-silver/80 rounded-xl cursor-pointer data-[selected]:bg-white/[0.03] data-[selected]:text-brand-silver transition-all"
+                      className="group flex items-center gap-3 px-3 py-3 my-0.5 text-sm text-brand-silver/80 rounded-xl cursor-pointer data-[selected]:bg-white/[0.03] data-[selected]:text-brand-silver transition-all"
                     >
                       <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-white/5 group-data-[selected]:bg-white/10 transition-colors">
                         <Icon size={18} weight="duotone" className="text-brand-silver/50 group-data-[selected]:text-brand-silver/80" />
@@ -151,7 +151,7 @@ export default function CommandPalette() {
                           openTaskPanel(task.taskId);
                           closeCommandPalette();
                         }}
-                        className="group flex items-center gap-3 px-3 py-3 text-sm text-brand-silver/80 rounded-xl cursor-pointer data-[selected]:bg-white/[0.03] data-[selected]:text-brand-silver transition-all"
+                        className="group flex items-center gap-3 px-3 py-3 my-0.5 text-sm text-brand-silver/80 rounded-xl cursor-pointer data-[selected]:bg-white/[0.03] data-[selected]:text-brand-silver transition-all"
                       >
                         <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-white/5 group-data-[selected]:bg-white/10 transition-colors">
                           <div className={`w-2 h-2 rounded-full ${

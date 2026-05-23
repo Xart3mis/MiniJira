@@ -29,12 +29,16 @@ export async function deleteItem(tableName, key) {
 }
 
 export async function scanTable(tableName) {
-    const params = {
-        TableName: tableName
-    };
-
-    const result = await dynamoDB.scan(params).promise();
-    return result.Items || [];
+    const params = { TableName: tableName };
+    const items = [];
+    let lastKey;
+    do {
+        if (lastKey) params.ExclusiveStartKey = lastKey;
+        const result = await dynamoDB.scan(params).promise();
+        items.push(...(result.Items || []));
+        lastKey = result.LastEvaluatedKey;
+    } while (lastKey);
+    return items;
 }
 
 export async function queryByIndex(tableName, indexName, keyName, keyValue) {
@@ -42,16 +46,18 @@ export async function queryByIndex(tableName, indexName, keyName, keyValue) {
         TableName: tableName,
         IndexName: indexName,
         KeyConditionExpression: '#key = :value',
-        ExpressionAttributeNames: {
-            '#key': keyName
-        },
-        ExpressionAttributeValues: {
-            ':value': keyValue
-        }
+        ExpressionAttributeNames: { '#key': keyName },
+        ExpressionAttributeValues: { ':value': keyValue }
     };
-
-    const result = await dynamoDB.query(params).promise();
-    return result.Items || [];
+    const items = [];
+    let lastKey;
+    do {
+        if (lastKey) params.ExclusiveStartKey = lastKey;
+        const result = await dynamoDB.query(params).promise();
+        items.push(...(result.Items || []));
+        lastKey = result.LastEvaluatedKey;
+    } while (lastKey);
+    return items;
 }
 
 export async function queryByPk(tableName, pkName, pkValue) {

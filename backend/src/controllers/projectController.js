@@ -80,7 +80,8 @@ export async function getProjects(req, res, next) {
             if (!userTeamId) {
                 return res.json({ success: true, count: 0, data: [] });
             }
-            projects = await queryByIndex(PROJECTS_TABLE, 'teamId-index', 'teamId', userTeamId);
+            projects = await scanTable(PROJECTS_TABLE);
+            projects = projects.filter((p) => p.teamId === userTeamId);
         }
 
         res.json({

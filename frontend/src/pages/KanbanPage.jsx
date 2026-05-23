@@ -23,7 +23,12 @@ export default function KanbanPage() {
   });
   const [showFilters, setShowFilters] = useState(false);
 
-  const activeFilters = Object.values(filters).filter(Boolean).length;
+  // teamId is a locked system filter for employees (not user-chosen), so exclude it
+  // from the count. Only count filters the user can actually see and change.
+  const activeFilters = [
+    ...(isManager ? [filters.teamId, filters.assigneeId] : []),
+    filters.priority,
+  ].filter(Boolean).length;
 
   const { data: teams = [] } = useTeams();
   const { data: users = [] } = useUsers();
