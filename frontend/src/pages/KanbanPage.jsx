@@ -17,7 +17,7 @@ export default function KanbanPage() {
   const isManager = user?.role === 'Manager';
 
   const [filters, setFilters] = useState({
-    teamId: user?.teamId ?? '',
+    teamId: isManager ? '' : (user?.teamId ?? ''),
     priority: '',
     assigneeId: '',
   });
@@ -40,7 +40,7 @@ export default function KanbanPage() {
   const { data: tasks = [], isLoading } = useTasks(taskParams);
 
   const clearFilters = () =>
-    setFilters({ teamId: user?.teamId ?? '', priority: '', assigneeId: '' });
+    setFilters({ teamId: isManager ? '' : (user?.teamId ?? ''), priority: '', assigneeId: '' });
 
   const setFilter = (key, val) => setFilters((f) => ({ ...f, [key]: val }));
 

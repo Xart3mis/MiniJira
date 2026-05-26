@@ -71,6 +71,18 @@ export async function createTeam(req, res, next) {
     }
 }
 
+export async function getPublicTeams(req, res, next) {
+    try {
+        const teams = await scanTable(TEAMS_TABLE);
+        res.json({
+            success: true,
+            data: teams.map(({ teamId, name }) => ({ teamId, name }))
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
 export async function getTeams(req, res, next) {
     try {
         const role = req.user.role;

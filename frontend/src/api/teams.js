@@ -1,6 +1,9 @@
 import client from './client';
 
 export const teamsApi = {
+  getPublic: () =>
+    client.get('/api/teams/public').then((r) => r.data.data),
+
   getAll: () =>
     client.get('/api/teams').then((r) => r.data.data),
 

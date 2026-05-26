@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Eye, EyeSlash, Kanban, CheckCircle } from '@phosphor-icons/react';
 import { signUp, confirmSignUp, signIn } from '../auth/cognito';
 import { usersApi } from '../api/users';
+import { teamsApi } from '../api/teams';
 import useAuthStore from '../store/authStore';
 import Input from '../components/ui/Input';
 import { Select } from '../components/ui/Select';
@@ -28,6 +29,15 @@ export default function SignUpPage() {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState('');
+  const [teams, setTeams] = useState([]);
+  const [teamsLoading, setTeamsLoading] = useState(true);
+
+  useEffect(() => {
+    teamsApi.getPublic()
+      .then((data) => setTeams(data))
+      .catch(() => setTeams([]))
+      .finally(() => setTeamsLoading(false));
+  }, []);
 
   const set = (key, val) => {
     setForm((f) => ({ ...f, [key]: val }));
@@ -41,6 +51,7 @@ export default function SignUpPage() {
     if (!form.email.includes('@')) errs.email = 'Enter a valid email';
     if (form.password.length < 8) errs.password = 'At least 8 characters';
     if (form.password !== form.confirmPassword) errs.confirmPassword = 'Passwords do not match';
+    if (!form.teamId) errs.teamId = 'Please select a team';
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -174,12 +185,16 @@ export default function SignUpPage() {
                 options={ROLES}
                 required
               />
-              <Input
-                label="Team ID"
-                placeholder="Paste the UUID from the Teams page"
+              <Select
+                label="Team"
                 value={form.teamId}
-                onChange={(e) => set('teamId', e.target.value)}
-                helper="Ask your manager to copy it from the Teams page"
+                onValueChange={(v) => set('teamId', v)}
+                options={[
+                  { value: '', label: teamsLoading ? 'Loading teams…' : 'Select a team…', disabled: true },
+                  ...teams.map((t) => ({ value: t.teamId, label: t.name })),
+                ]}
+                error={errors.teamId}
+                required
               />
 
               {serverError && (

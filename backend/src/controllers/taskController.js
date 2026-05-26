@@ -228,7 +228,16 @@ export async function getTasks(req, res, next) {
         const filterPriority = req.query.priority;
         const filterAssigneeId = req.query.assigneeId;
 
-        if (role === 'Manager' || role === 'Admin') {
+        let effectiveRole = role;
+        if (effectiveRole !== 'Manager' && effectiveRole !== 'Admin' && !teamId) {
+            // JWT may lack custom:role — fall back to DynamoDB profile
+            const dbUser = await getItem(USERS_TABLE, { userId: req.user.userId });
+            if (dbUser?.role === 'Manager' || dbUser?.role === 'Admin') {
+                effectiveRole = dbUser.role;
+            }
+        }
+
+        if (effectiveRole === 'Manager' || effectiveRole === 'Admin') {
             tasks = await scanTable(TASKS_TABLE);
             if (filterTeamId) {
                 tasks = tasks.filter((t) => t.teamId === filterTeamId);
@@ -272,8 +281,15 @@ export async function getTaskById(req, res, next) {
             });
         }
 
-        const role = req.user.role;
+        let role = req.user.role;
         const teamId = req.user.teamId;
+
+        if (role !== 'Manager' && role !== 'Admin' && !teamId) {
+            const dbUser = await getItem(USERS_TABLE, { userId: req.user.userId });
+            if (dbUser?.role === 'Manager' || dbUser?.role === 'Admin') {
+                role = dbUser.role;
+            }
+        }
 
         if (role !== 'Manager' && role !== 'Admin' && task.teamId !== teamId) {
             return res.status(403).json({

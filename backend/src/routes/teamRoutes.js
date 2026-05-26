@@ -5,6 +5,7 @@ import {
     createTeam,
     getTeams,
     getTeamById,
+    getPublicTeams,
     updateTeam,
     deleteTeam,
     addMember,
@@ -12,6 +13,10 @@ import {
 } from '../controllers/teamController.js';
 
 const router = express.Router();
+
+// Public — no auth required (used by sign-up page)
+router.get('/public', getPublicTeams);
+
 router.use(authenticateToken);
 
 router.post('/', requireRole('Manager'), createTeam);
