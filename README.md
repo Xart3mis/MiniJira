@@ -2,7 +2,6 @@
 
 A lightweight team task-management application (think Jira/Trello) built with MERN and deployed on AWS.
 
-**Deadline:** May 22, 2026 at 11:59 PM  
 **Team:** 5 people  
 **Stack:** React (frontend) + Express.js (backend) + DynamoDB (data) + AWS services
 
@@ -83,14 +82,3 @@ MiniJira/
 - EBS: 30GB max
 - ALB/DynamoDB: Monitor usage
 - **Always STOP (don't terminate) resources after testing**
-
-## Next Steps
-
-1. Clone this repo and set up locally
-2. Read **CLAUDE.md** for coding standards and context
-3. Read **docs/ARCHITECTURE.md** for system design
-4. Divide work by person/component
-5. Use GitHub issues/PRs for collaboration
-6. Daily standup on progress
-
-See CLAUDE.md for more details.
