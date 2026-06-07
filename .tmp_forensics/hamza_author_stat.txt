@@ -1,0 +1,29 @@
+---
+commit:3e074994552cdf6699441b699a376dead0f426fd
+author:hamzabakrr <hamzaalimohamed53@gmail.com>
+date:2026-05-21 22:21:06 +0300
+subject:feat(lambda): add Windows packaging scripts and S3/SNS services
+refs:
+
+ backend/lambda/_lambda-pack.ps1              |  54 ++++++++++
+ backend/lambda/assignmentWorker/.gitignore   |   3 +
+ backend/lambda/assignmentWorker/package.cmd  |   3 +
+ backend/lambda/assignmentWorker/package.json |  13 +++
+ backend/lambda/assignmentWorker/package.ps1  |   2 +
+ backend/lambda/dailyDigest/.gitignore        |   3 +
+ backend/lambda/dailyDigest/package.cmd       |   3 +
+ backend/lambda/dailyDigest/package.json      |  12 +++
+ backend/lambda/dailyDigest/package.ps1       |   2 +
+ backend/lambda/imageResize/.gitignore        |   3 +
+ backend/lambda/imageResize/README.md         |  78 ++++++++++++++
+ backend/lambda/imageResize/package.cmd       |   4 +
+ backend/lambda/imageResize/package.json      |  11 ++
+ backend/lambda/imageResize/package.ps1       |  49 +++++++++
+ backend/src/services/s3Service.js            | 155 +++++++++++++++++++++++++++
+ backend/src/services/snsService.js           | 107 ++++++++++++++++++
+ docs/SETUP.md                                |  10 +-
+ package-imageResize.cmd                      |   4 +
+ package.json                                 |   6 +-
+ scripts/fix-npm.ps1                          |  12 +++
+ scripts/terminal-init.ps1                    |   9 ++
+ 21 files changed, 540 insertions(+), 3 deletions(-)

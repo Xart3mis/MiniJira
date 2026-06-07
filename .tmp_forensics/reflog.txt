@@ -1,0 +1,3 @@
+4164dd2 refs/remotes/origin/main@{0}: fetch origin main:refs/remotes/origin/main: storing head
+4164dd2 refs/heads/copilot/contribution-report-analysis@{0}: clone: from https://github.com/Xart3mis/MiniJira.git
+4164dd2 HEAD@{0}: clone: from https://github.com/Xart3mis/MiniJira.git

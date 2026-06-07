@@ -1,0 +1,703 @@
+---
+commit:4164dd203f9b027d1b29451fd534c3a0d453314a
+author:Yassin Diab <64959529+Xart3mis@users.noreply.github.com>
+date:2026-05-26 16:02:23 +0300
+subject:Update README to remove next steps section
+refs:HEAD -> copilot/contribution-report-analysis, origin/main, origin/copilot/contribution-report-analysis
+
+ README.md | 12 ------------
+ 1 file changed, 12 deletions(-)
+---
+commit:d514664054259f61422229d3181d4f09bdb67b5a
+author:Yassin Diab <yassin.diab@student.giu-uni.de>
+date:2026-05-26 16:00:34 +0300
+subject:feat: add role fallback from db and public teams dropdown
+refs:
+
+ backend/src/controllers/taskController.js | 20 ++++++++++++++++++--
+ backend/src/controllers/teamController.js | 12 ++++++++++++
+ backend/src/routes/teamRoutes.js          |  5 +++++
+ frontend/src/api/teams.js                 |  3 +++
+ frontend/src/pages/KanbanPage.jsx         |  4 ++--
+ frontend/src/pages/SignUpPage.jsx         | 27 +++++++++++++++++++++------
+ 6 files changed, 61 insertions(+), 10 deletions(-)
+---
+commit:adc0bb6438a629be9270471186460c259072971d
+author:Yassin Diab <yassin.diab@student.giu-uni.de>
+date:2026-05-23 12:54:54 +0300
+subject:favicon
+refs:
+
+ frontend/public/android-chrome-192x192.png | Bin 0 -> 32142 bytes
+ frontend/public/android-chrome-512x512.png | Bin 0 -> 147134 bytes
+ frontend/public/apple-touch-icon.png       | Bin 0 -> 29486 bytes
+ frontend/public/favicon-16x16.png          | Bin 0 -> 782 bytes
+ frontend/public/favicon-32x32.png          | Bin 0 -> 1971 bytes
+ frontend/public/favicon.ico                | Bin 0 -> 15406 bytes
+ frontend/public/manifest.json              |   1 +
+ 7 files changed, 1 insertion(+)
+---
+commit:c804716875699a7d880067601c446b81d344dfdd
+author:Yassin Diab <yassin.diab@student.giu-uni.de>
+date:2026-05-23 12:53:35 +0300
+subject:feat(frontend): wire up favicons in index.html
+refs:
+
+ frontend/index.html | 5 +++++
+ 1 file changed, 5 insertions(+)
+---
+commit:d722b798794c006163a60a1dc850f2d49405f2f6
+author:Yassin Diab <yassin.diab@student.giu-uni.de>
+date:2026-05-23 12:43:50 +0300
+subject:fix: resolve task filtering, team isolation, and UI bugs
+refs:
+
+ backend/src/config/aws.js                          |  4 +-
+ backend/src/controllers/projectController.js       |  3 +-
+ backend/src/controllers/taskController.js          | 53 ++++++++++-------
+ backend/src/controllers/teamController.js          | 23 ++++++++
+ backend/src/services/dynamoService.js              | 36 +++++++-----
+ .../src/components/comments/CommentSection.jsx     |  8 +--
+ frontend/src/components/tasks/ActivityLog.jsx      |  6 +-
+ frontend/src/components/tasks/TaskPanel.jsx        |  4 +-
+ frontend/src/components/ui/CommandPalette.jsx      |  8 +--
+ frontend/src/hooks/useTeams.js                     | 66 +++++++++++++++++++---
+ frontend/src/pages/KanbanPage.jsx                  |  7 ++-
+ frontend/src/pages/MyTasksPage.jsx                 | 26 +++++++--
+ frontend/src/pages/SettingsPage.jsx                |  7 ++-
+ frontend/src/pages/TeamsPage.jsx                   | 11 +++-
+ 14 files changed, 197 insertions(+), 65 deletions(-)
+---
+commit:e8dc7ad8107aab9d25da0f0ec7a7a21f3e74c489
+author:Yassin Diab <yassin.diab@student.giu-uni.de>
+date:2026-05-23 11:32:14 +0300
+subject:feat(upload): add processing state with image polling after S3 upload
+refs:
+
+ frontend/src/api/upload.js                    | 21 +++++++++++++++++++++
+ frontend/src/components/upload/FileUpload.jsx | 23 ++++++++++++++++++++---
+ 2 files changed, 41 insertions(+), 3 deletions(-)
+---
+commit:97814da6a486745be63db31c8b328c9d3b005371
+author:Yassin Diab <yassin.diab@student.giu-uni.de>
+date:2026-05-23 04:14:20 +0300
+subject:fuck me sideways (finale)
+refs:
+
+ frontend/src/store/authStore.js | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+---
+commit:3a7da601344b260a59ca4192aa32c1a12b645cd2
+author:Yassin Diab <yassin.diab@student.giu-uni.de>
+date:2026-05-23 04:11:24 +0300
+subject:fuck p.6
+refs:
+
+ frontend/dist.zip | Bin 739663 -> 0 bytes
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+---
+commit:036eaabbfcedfdd40e3c7d2d7675c56fbe700768
+author:Yassin Diab <yassin.diab@student.giu-uni.de>
+date:2026-05-23 04:10:57 +0300
+subject:add .env* to gitignore
+refs:
+
+ .gitignore | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+---
+commit:6a6111515dd5f1c5403a11034e281666672ecab3
+author:Yassin Diab <yassin.diab@student.giu-uni.de>
+date:2026-05-23 04:03:00 +0300
+subject:fix(auth): align custom:teamid attribute casing with Cognito schema
+refs:
+
+ backend/src/middleware/authMiddleware.js | 2 +-
+ frontend/src/auth/cognito.js             | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+---
+commit:25ad8d2cf61ca02d0063ec4120e645d47903b448
+author:Yassin Diab <yassin.diab@student.giu-uni.de>
+date:2026-05-23 03:37:16 +0300
+subject:fix: handle teamless users gracefully and fix project dropdown
+refs:
+
+ backend/src/controllers/projectController.js | 6 +-----
+ backend/src/controllers/taskController.js    | 5 +----
+ 2 files changed, 2 insertions(+), 9 deletions(-)
+---
+commit:4421baf274aba0150ed966b70a11643d0680879b
+author:Yassin Diab <yassin.diab@student.giu-uni.de>
+date:2026-05-23 03:01:48 +0300
+subject:fuck p.5
+refs:
+
+ backend/lambda/imageResize/index.js         |   7 +++++++
+ backend/src/config/aws.js                   |   3 ++-
+ backend/src/controllers/uploadController.js |   5 ++++-
+ frontend/dist.zip                           | Bin 0 -> 739663 bytes
+ frontend/src/components/tasks/TaskPanel.jsx |  12 +++++++++---
+ frontend/vite.config.js                     |  13 +++++++------
+ 6 files changed, 29 insertions(+), 11 deletions(-)
+---
+commit:ba94c27b770e9f5af5bdb06da74981efc13447bd
+author:Yassin Diab <yassin.diab@student.giu-uni.de>
+date:2026-05-23 01:12:09 +0300
+subject:fuck p.4
+refs:
+
+ .claude/agents/security-reviewer.md                |  53 ++
+ .claude/settings.json                              |  26 +
+ .claude/skills/deploy-lambda/SKILL.md              |  36 ++
+ .claude/skills/team-isolation-check/SKILL.md       |  46 ++
+ .serena/memories/memory_maintenance.md             |  33 ++
+ PRODUCT.md                                         |  33 ++
+ backend/src/controllers/taskController.js          |   2 +-
+ backend/src/controllers/teamController.js          |   2 +-
+ backend/src/controllers/uploadController.js        |   2 +-
+ backend/src/controllers/userController.js          |  10 +-
+ backend/src/middleware/authMiddleware.js           |   8 +-
+ cors-config.json                                   |  11 +
+ .../plans/2026-05-21-backend-completion.md         | 596 +++++++++++++++++++++
+ frontend/src/api/teams.js                          |   6 +
+ frontend/src/api/upload.js                         |   8 +-
+ .../src/components/dashboard/ActivityChart.jsx     |  24 +-
+ frontend/src/components/dashboard/StatsRow.jsx     |   4 +-
+ frontend/src/components/dashboard/TeamWorkload.jsx |  16 +-
+ frontend/src/components/kanban/TaskCard.jsx        |  10 +-
+ frontend/src/components/layout/Sidebar.jsx         |  12 +-
+ frontend/src/components/layout/TopBar.jsx          |  22 +-
+ frontend/src/components/projects/ProjectForm.jsx   |  16 +-
+ frontend/src/components/projects/ProjectList.jsx   |   2 +-
+ frontend/src/components/tasks/ActivityLog.jsx      |  10 +-
+ frontend/src/components/tasks/CreateTaskModal.jsx  |  39 +-
+ frontend/src/components/teams/TeamMembersModal.jsx | 156 ++++++
+ frontend/src/components/teams/TeamTable.jsx        |  87 ++-
+ frontend/src/components/ui/Badge.jsx               |   2 +-
+ frontend/src/components/ui/Button.jsx              |   6 +-
+ frontend/src/components/ui/CommandPalette.jsx      | 100 ++--
+ frontend/src/components/ui/EmptyState.jsx          |   6 +-
+ frontend/src/components/ui/Input.jsx               |  12 +-
+ frontend/src/components/upload/FileUpload.jsx      |  11 +-
+ frontend/src/hooks/useTeams.js                     |  30 ++
+ frontend/src/index.css                             |  50 +-
+ frontend/src/lib/constants.js                      |  24 +-
+ frontend/src/lib/utils.js                          |  12 +-
+ frontend/src/main.jsx                              |  10 +-
+ frontend/src/pages/AnalyticsPage.jsx               |  36 +-
+ frontend/src/pages/DashboardPage.jsx               |  16 +-
+ frontend/src/pages/ForgotPasswordPage.jsx          |   2 +-
+ frontend/src/pages/LoginPage.jsx                   |   4 +-
+ frontend/src/pages/MyTasksPage.jsx                 |   4 +-
+ frontend/src/pages/SignUpPage.jsx                  |  17 +-
+ frontend/src/pages/TeamsPage.jsx                   |  15 +-
+ frontend/src/store/authStore.js                    |   8 +-
+ frontend/tailwind.config.js                        |  16 +-
+ 47 files changed, 1406 insertions(+), 245 deletions(-)
+---
+commit:27eca65a3ba775a4ca1036671ac58437c7e95511
+author:Yassin Diab <yassin.diab@student.giu-uni.de>
+date:2026-05-23 00:15:36 +0300
+subject:fuck p.3
+refs:
+
+ backend/src/controllers/projectController.js |  4 ++--
+ backend/src/controllers/taskController.js    | 10 +++++-----
+ 2 files changed, 7 insertions(+), 7 deletions(-)
+---
+commit:c0853f3a5729113bd9e4c05deed4fa825187437b
+author:Yassin Diab <yassin.diab@student.giu-uni.de>
+date:2026-05-23 00:15:16 +0300
+subject:fuck p.2
+refs:
+
+ backend/src/server.js | 7 -------
+ 1 file changed, 7 deletions(-)
+---
+commit:317863b50bd789c291d9bba380a109114f57f15d
+author:Yassin Diab <yassin.diab@student.giu-uni.de>
+date:2026-05-23 00:11:57 +0300
+subject:fuck
+refs:
+
+ backend/src/server.js | 6 ++++++
+ 1 file changed, 6 insertions(+)
+---
+commit:e049c4259c2c1c967b739fbd4b8f4ab109821c40
+author:Yassin Diab <yassin.diab@student.giu-uni.de>
+date:2026-05-23 00:09:33 +0300
+subject:add frontend build dir to server
+refs:
+
+ backend/src/server.js | 1 +
+ 1 file changed, 1 insertion(+)
+---
+commit:5d6184c58ef8dceae2509fd222791536f783bbb2
+author:Yassin Diab <yassin.diab@student.giu-uni.de>
+date:2026-05-23 00:01:17 +0300
+subject:backend "final" changes
+refs:
+
+ backend/src/controllers/projectController.js |  12 +-
+ backend/src/controllers/taskController.js    |   6 +-
+ backend/src/controllers/teamController.js    | 146 ++++++++-
+ backend/src/controllers/userController.js    |  38 ++-
+ backend/src/routes/teamRoutes.js             |   7 +-
+ backend/src/routes/userRoutes.js             |   6 +-
+ backend/src/services/dynamoService.js        |   5 +-
+ package-lock.json                            | 466 +++++++++++++++++++++++++++
+ package.json                                 |   3 +
+ 9 files changed, 650 insertions(+), 39 deletions(-)
+---
+commit:e191e59ab3a78110a7695dd5f37d0440ca24157e
+author:Yassin Diab <yassin.diab@student.giu-uni.de>
+date:2026-05-22 23:14:53 +0300
+subject:frontend almost done ??
+refs:
+
+ frontend/.env.example                              |    5 +
+ frontend/index.html                                |   19 +
+ frontend/package-lock.json                         | 8288 ++++++++++++++++++++
+ frontend/package.json                              |   35 +-
+ frontend/postcss.config.js                         |    6 +
+ frontend/src/App.jsx                               |   70 +
+ frontend/src/api/client.js                         |   36 +
+ frontend/src/api/comments.js                       |    9 +
+ frontend/src/api/projects.js                       |   18 +
+ frontend/src/api/tasks.js                          |   34 +
+ frontend/src/api/teams.js                          |   18 +
+ frontend/src/api/upload.js                         |   17 +
+ frontend/src/api/users.js                          |   18 +
+ frontend/src/auth/cognito.js                       |  134 +
+ .../src/components/comments/CommentSection.jsx     |  118 +
+ .../src/components/dashboard/ActivityChart.jsx     |  107 +
+ frontend/src/components/dashboard/StatsRow.jsx     |   76 +
+ frontend/src/components/dashboard/TeamWorkload.jsx |   77 +
+ frontend/src/components/kanban/KanbanBoard.jsx     |   99 +
+ frontend/src/components/kanban/KanbanColumn.jsx    |   74 +
+ frontend/src/components/kanban/TaskCard.jsx        |  101 +
+ frontend/src/components/layout/AppLayout.jsx       |   31 +
+ frontend/src/components/layout/Sidebar.jsx         |  177 +
+ frontend/src/components/layout/TopBar.jsx          |  111 +
+ .../components/notifications/NotificationPanel.jsx |   82 +
+ frontend/src/components/projects/ProjectForm.jsx   |  100 +
+ frontend/src/components/projects/ProjectList.jsx   |   98 +
+ frontend/src/components/tasks/ActivityLog.jsx      |   46 +
+ frontend/src/components/tasks/CreateTaskModal.jsx  |  186 +
+ frontend/src/components/tasks/TaskPanel.jsx        |  276 +
+ frontend/src/components/teams/TeamTable.jsx        |  119 +
+ frontend/src/components/ui/Avatar.jsx              |   68 +
+ frontend/src/components/ui/Badge.jsx               |   58 +
+ frontend/src/components/ui/Button.jsx              |   66 +
+ frontend/src/components/ui/CommandPalette.jsx      |  166 +
+ frontend/src/components/ui/EmptyState.jsx          |   35 +
+ frontend/src/components/ui/Input.jsx               |   75 +
+ frontend/src/components/ui/Select.jsx              |   84 +
+ frontend/src/components/ui/Skeleton.jsx            |   52 +
+ frontend/src/components/ui/Tooltip.jsx             |   25 +
+ .../src/components/upload/AttachmentGallery.jsx    |   77 +
+ frontend/src/components/upload/FileUpload.jsx      |  144 +
+ frontend/src/hooks/useProjects.js                  |   61 +
+ frontend/src/hooks/useTasks.js                     |   69 +
+ frontend/src/hooks/useTeams.js                     |   61 +
+ frontend/src/hooks/useUsers.js                     |   33 +
+ frontend/src/index.css                             |  108 +
+ frontend/src/lib/constants.js                      |   67 +
+ frontend/src/lib/utils.js                          |   73 +
+ frontend/src/main.jsx                              |   46 +
+ frontend/src/pages/AnalyticsPage.jsx               |  176 +
+ frontend/src/pages/DashboardPage.jsx               |  138 +
+ frontend/src/pages/ForgotPasswordPage.jsx          |  159 +
+ frontend/src/pages/KanbanPage.jsx                  |  146 +
+ frontend/src/pages/LoginPage.jsx                   |  257 +
+ frontend/src/pages/MyTasksPage.jsx                 |  104 +
+ frontend/src/pages/ProjectsPage.jsx                |   75 +
+ frontend/src/pages/SettingsPage.jsx                |  131 +
+ frontend/src/pages/SignUpPage.jsx                  |  241 +
+ frontend/src/pages/TeamsPage.jsx                   |  129 +
+ frontend/src/store/authStore.js                    |   54 +
+ frontend/src/store/uiStore.js                      |   21 +
+ frontend/tailwind.config.js                        |   49 +
+ frontend/vite.config.js                            |   18 +
+ 64 files changed, 13642 insertions(+), 9 deletions(-)
+---
+commit:4554492b3fa044ef064d8224ce2a9724cb78dbe6
+author:kanzyhany <kenzy.ibrahim@student.giu-uni.de>
+date:2026-05-22 18:48:40 +0300
+subject:Merge branch 'main' of https://github.com/Xart3mis/MiniJira
+refs:
+---
+commit:b6621513150d5aa6b1b21f32674fe140f8c150ab
+author:kanzyhany <kenzy.ibrahim@student.giu-uni.de>
+date:2026-05-22 18:48:25 +0300
+subject:updated md
+refs:
+
+ backend/BACKEND_PROGRESS.md | 247 ++++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 225 insertions(+), 22 deletions(-)
+---
+commit:547e6708564af4e3b778b2013680fc3e176625b8
+author:Kinglolo7 <elsherief.ali@gmail.com>
+date:2026-05-22 15:36:56 +0300
+subject:fixing auth
+refs:
+
+ backend/src/middleware/authMiddleware.js | 2 ++
+ 1 file changed, 2 insertions(+)
+---
+commit:a1e5c29a738255ee79c6620c705764d0e276dc45
+author:kanzyhany <kenzy.ibrahim@student.giu-uni.de>
+date:2026-05-22 14:16:52 +0300
+subject:updated task ctrlr bc of table creation
+refs:
+
+ backend/src/controllers/taskController.js | 30 +++++++++++++++++++++++++-----
+ 1 file changed, 25 insertions(+), 5 deletions(-)
+---
+commit:3e074994552cdf6699441b699a376dead0f426fd
+author:hamzabakrr <hamzaalimohamed53@gmail.com>
+date:2026-05-21 22:21:06 +0300
+subject:feat(lambda): add Windows packaging scripts and S3/SNS services
+refs:
+
+ backend/lambda/_lambda-pack.ps1              |  54 ++++++++++
+ backend/lambda/assignmentWorker/.gitignore   |   3 +
+ backend/lambda/assignmentWorker/package.cmd  |   3 +
+ backend/lambda/assignmentWorker/package.json |  13 +++
+ backend/lambda/assignmentWorker/package.ps1  |   2 +
+ backend/lambda/dailyDigest/.gitignore        |   3 +
+ backend/lambda/dailyDigest/package.cmd       |   3 +
+ backend/lambda/dailyDigest/package.json      |  12 +++
+ backend/lambda/dailyDigest/package.ps1       |   2 +
+ backend/lambda/imageResize/.gitignore        |   3 +
+ backend/lambda/imageResize/README.md         |  78 ++++++++++++++
+ backend/lambda/imageResize/package.cmd       |   4 +
+ backend/lambda/imageResize/package.json      |  11 ++
+ backend/lambda/imageResize/package.ps1       |  49 +++++++++
+ backend/src/services/s3Service.js            | 155 +++++++++++++++++++++++++++
+ backend/src/services/snsService.js           | 107 ++++++++++++++++++
+ docs/SETUP.md                                |  10 +-
+ package-imageResize.cmd                      |   4 +
+ package.json                                 |   6 +-
+ scripts/fix-npm.ps1                          |  12 +++
+ scripts/terminal-init.ps1                    |   9 ++
+ 21 files changed, 540 insertions(+), 3 deletions(-)
+---
+commit:7dda1be0a9820ceb55fd60134739982b748cdf2e
+author:Yassin Diab <yassin.diab@student.giu-uni.de>
+date:2026-05-21 19:20:58 +0300
+subject:feat(tasks): publish CloudWatch metrics TasksCreatedDaily, TasksAssignedPerTeam, TasksClosedDaily
+refs:
+
+ backend/src/controllers/taskController.js | 31 ++++++++++++++++++++++++++++++-
+ 1 file changed, 30 insertions(+), 1 deletion(-)
+---
+commit:8c0cb958e5df3032246c247b01861f66c0b31cda
+author:Yassin Diab <yassin.diab@student.giu-uni.de>
+date:2026-05-21 19:19:58 +0300
+subject:feat(tasks): GET /api/tasks/:id/activity endpoint
+refs:
+
+ backend/src/controllers/taskController.js | 32 +++++++++++++++++++++++++++++++
+ backend/src/routes/taskRoutes.js          |  4 +++-
+ backend/src/services/dynamoService.js     | 11 +++++++++++
+ 3 files changed, 46 insertions(+), 1 deletion(-)
+---
+commit:f053fa21b96d64ca253b8ad26b1bb208e7f0e9c1
+author:Yassin Diab <yassin.diab@student.giu-uni.de>
+date:2026-05-21 19:18:56 +0300
+subject:feat(tasks): write ActivityLog entry to DynamoDB on status change
+refs:
+
+ backend/src/config/env.js                 |  1 +
+ backend/src/controllers/taskController.js | 23 +++++++++++++++++++++++
+ 2 files changed, 24 insertions(+)
+---
+commit:8c7ba9dc6e92f722e345ab6b80855b3708d0f8b7
+author:Yassin Diab <yassin.diab@student.giu-uni.de>
+date:2026-05-21 19:17:41 +0300
+subject:fix(comments): enforce team isolation + use req.user for comment author
+refs:
+
+ backend/src/controllers/commentController.js | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
+---
+commit:f9014fdf6ac9703138b1760969bd977887dcf0a9
+author:Yassin Diab <yassin.diab@student.giu-uni.de>
+date:2026-05-21 19:17:10 +0300
+subject:fix(tasks): remove req.query auth bypass + restrict employees to status-only updates
+refs:
+
+ backend/src/controllers/taskController.js | 70 +++++++++++++++----------------
+ 1 file changed, 35 insertions(+), 35 deletions(-)
+---
+commit:f3ad8b3bc36015fb7e728bead98d8f9e8c82cac8
+author:Yassin Diab <yassin.diab@student.giu-uni.de>
+date:2026-05-21 19:14:55 +0300
+subject:feat(routes): requireRole(Manager) on all mutating team/project/task routes
+refs:
+
+ backend/src/routes/projectRoutes.js | 8 ++++----
+ backend/src/routes/taskRoutes.js    | 6 +++---
+ backend/src/routes/teamRoutes.js    | 8 ++++----
+ 3 files changed, 11 insertions(+), 11 deletions(-)
+---
+commit:f71c1d3d22d9abaf2e9c748ecc36b962b29f284f
+author:Yassin Diab <yassin.diab@student.giu-uni.de>
+date:2026-05-21 19:13:54 +0300
+subject:fix(tasks): declare COMMENTS_TABLE + use queryByIndex in deleteTask
+refs:
+
+ backend/src/controllers/taskController.js | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
+---
+commit:c71a43e459fa4bd637411331f72e2c5c5a2eb0da
+author:Yassin Diab <yassin.diab@student.giu-uni.de>
+date:2026-05-21 18:36:55 +0300
+subject:docs: update progress lists after backend sprint
+refs:
+
+ COMPLETION_CHECKLIST.md     | 82 ++++++++++++++++++++++-----------------------
+ backend/BACKEND_PROGRESS.md | 43 ++++++++++++++++++------
+ 2 files changed, 74 insertions(+), 51 deletions(-)
+---
+commit:8a528fcee646e7815d4f75d68c5beba9b903cf4b
+author:Yassin Diab <yassin.diab@student.giu-uni.de>
+date:2026-05-21 18:14:04 +0300
+subject:feat(backend): S3 presigned upload endpoint + Lambda functions + env fixes
+refs:
+
+ .env.example                                | 10 ++--
+ backend/lambda/assignmentWorker/index.js    | 77 ++++++++++++++++++++++++++++
+ backend/lambda/dailyDigest/index.js         | 76 +++++++++++++++++++++++++++
+ backend/lambda/imageResize/index.js         | 79 +++++++++++++++++++++++++++++
+ backend/src/controllers/uploadController.js | 58 +++++++++++++++++++++
+ backend/src/routes/uploadRoutes.js          | 11 ++++
+ backend/src/server.js                       |  2 +
+ 7 files changed, 308 insertions(+), 5 deletions(-)
+---
+commit:f9f28236724c1e9e97ee7e1167bc683308ccb887
+author:Yassin Diab <yassin.diab@student.giu-uni.de>
+date:2026-05-21 18:13:56 +0300
+subject:feat(backend): team isolation for projects + SNS on task assignment
+refs:
+
+ backend/src/controllers/projectController.js | 29 ++++++++++++++++++++-
+ backend/src/controllers/taskController.js    | 38 ++++++++++++++++++++++++++++
+ 2 files changed, 66 insertions(+), 1 deletion(-)
+---
+commit:089ef32d431e5df8395240887a1e05807e1f86a9
+author:Yassin Diab <yassin.diab@student.giu-uni.de>
+date:2026-05-21 18:13:50 +0300
+subject:feat(routes): require authenticated JWT on all API routes
+refs:
+
+ backend/src/routes/commentRoutes.js | 2 ++
+ backend/src/routes/projectRoutes.js | 2 ++
+ backend/src/routes/taskRoutes.js    | 2 ++
+ backend/src/routes/teamRoutes.js    | 2 ++
+ backend/src/routes/userRoutes.js    | 2 ++
+ 5 files changed, 10 insertions(+)
+---
+commit:a8617026d281d6102dd0c882c13f2a91f794cfc8
+author:Yassin Diab <yassin.diab@student.giu-uni.de>
+date:2026-05-21 18:13:44 +0300
+subject:fix(auth): replace broken jwkToPem stub with jwk-to-pem library
+refs:
+
+ backend/package-lock.json                | 84 ++++++++++++++++++++++++++++++++
+ backend/package.json                     | 13 ++---
+ backend/src/config/env.js                |  7 +++
+ backend/src/middleware/authMiddleware.js | 15 +-----
+ 4 files changed, 99 insertions(+), 20 deletions(-)
+---
+commit:382a9c5b1203be63e7cfd3d88973bd746c1cbf7b
+author:Yassin Diab <yassin.diab@student.giu-uni.de>
+date:2026-05-21 11:34:25 +0300
+subject:added a completion checklist to track progress
+refs:
+
+ COMPLETION_CHECKLIST.md | 323 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 323 insertions(+)
+---
+commit:7a6723138717628dd5307abc5faeadb955fe42c7
+author:kanzyhany <kenzy.ibrahim@student.giu-uni.de>
+date:2026-05-21 03:00:54 +0300
+subject:progress md file
+refs:
+
+ backend/BACKEND_PROGRESS.md | 60 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
+---
+commit:bdc9af26a74ce9d68780baac58fa653d44abceaa
+author:kanzyhany <kenzy.ibrahim@student.giu-uni.de>
+date:2026-05-21 02:25:37 +0300
+subject:updated region in env file
+refs:
+
+ .env.example | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+---
+commit:9cf9ef686d7ac8536e69670f884b546689f5da0e
+author:kanzyhany <kenzy.ibrahim@student.giu-uni.de>
+date:2026-05-21 02:21:19 +0300
+subject:added details and safety for delete functions
+refs:
+
+ backend/src/controllers/projectController.js | 23 ++++++++++++++
+ backend/src/controllers/taskController.js    | 24 ++++++++++++++-
+ backend/src/controllers/teamController.js    | 45 ++++++++++++++++++++++++++++
+ backend/src/controllers/userController.js    | 24 +++++++++++++++
+ 4 files changed, 115 insertions(+), 1 deletion(-)
+---
+commit:28f1a33dcc1d01766839c6a4cf3b96cf62603344
+author:kanzyhany <kenzy.ibrahim@student.giu-uni.de>
+date:2026-05-21 02:13:15 +0300
+subject:added validation
+refs:
+
+ backend/src/config/env.js                    |  27 +++++
+ backend/src/controllers/commentController.js |  12 +++
+ backend/src/controllers/projectController.js |   9 ++
+ backend/src/controllers/taskController.js    | 153 ++++++++++++++++++++++-----
+ backend/src/controllers/userController.js    |  11 ++
+ backend/src/server.js                        |  46 +++++++-
+ 6 files changed, 228 insertions(+), 30 deletions(-)
+---
+commit:1fdbb3a05bb76c3f613a54837798c5083753cf5d
+author:kanzyhany <kenzy.ibrahim@student.giu-uni.de>
+date:2026-05-21 01:44:03 +0300
+subject:connecting comments on tasks
+refs:
+
+ backend/src/controllers/commentController.js | 3 ++-
+ backend/src/routes/taskRoutes.js             | 7 +++++++
+ 2 files changed, 9 insertions(+), 1 deletion(-)
+---
+commit:e6ce9741c1e1d0fd334e05e113767f680a0ce4c6
+author:kanzyhany <kenzy.ibrahim@student.giu-uni.de>
+date:2026-05-21 01:37:27 +0300
+subject:user code
+refs:
+
+ backend/src/controllers/userController.js | 269 ++++++++++++++++++++++++++++++
+ backend/src/routes/userRoutes.js          |  21 +++
+ backend/src/server.js                     |   2 +
+ 3 files changed, 292 insertions(+)
+---
+commit:5816b1a8ff2a82e673465e6207cf545d3dfb6428
+author:kanzyhany <kenzy.ibrahim@student.giu-uni.de>
+date:2026-05-21 01:13:59 +0300
+subject:team code
+refs:
+
+ backend/src/controllers/teamController.js | 176 ++++++++++++++++++++++++++++++
+ backend/src/routes/teamRoutes.js          |  19 ++++
+ backend/src/server.js                     |   2 +
+ 3 files changed, 197 insertions(+)
+---
+commit:c333b48e1c02f3a46230708b0cf649d2f4b6fdf7
+author:kanzyhany <kenzy.ibrahim@student.giu-uni.de>
+date:2026-05-21 00:42:28 +0300
+subject:comments code
+refs:
+
+ backend/src/controllers/commentController.js | 142 +++++++++++++++++++++++++++
+ backend/src/routes/commentRoutes.js          |  17 ++++
+ backend/src/server.js                        |   2 +
+ 3 files changed, 161 insertions(+)
+---
+commit:948250a35d0e0707dc2acb5a8fb6e597fc8ca1e1
+author:kanzyhany <kenzy.ibrahim@student.giu-uni.de>
+date:2026-05-21 00:37:06 +0300
+subject:prjs code
+refs:
+
+ backend/src/controllers/projectController.js | 186 +++++++++++++++++++++++++++
+ backend/src/routes/projectRoutes.js          |  19 +++
+ backend/src/server.js                        |   2 +
+ 3 files changed, 207 insertions(+)
+---
+commit:d9ae363f15a6f8aee86fab07e7d2999e90c1d3c6
+author:kanzyhany <kenzy.ibrahim@student.giu-uni.de>
+date:2026-05-21 00:17:51 +0300
+subject:updated dep
+refs:
+
+ backend/package-lock.json | 3171 +++++++++++++++++++++++++++++++++++++++++++++
+ backend/package.json      |    4 +-
+ 2 files changed, 3173 insertions(+), 2 deletions(-)
+---
+commit:258d527afa171710957ae216af28cd2783db505e
+author:kanzyhany <kenzy.ibrahim@student.giu-uni.de>
+date:2026-05-21 00:17:33 +0300
+subject:Merge branch 'main' of https://github.com/Xart3mis/MiniJira
+refs:
+---
+commit:fed50a8fb0ce08d0b80422d303171a61cdeeac74
+author:kanzyhany <kenzy.ibrahim@student.giu-uni.de>
+date:2026-05-21 00:16:41 +0300
+subject:tasks code
+refs:
+
+ backend/src/config/aws.js                 |  24 +++
+ backend/src/controllers/taskController.js | 267 ++++++++++++++++++++++++++++++
+ backend/src/routes/taskRoutes.js          |  19 +++
+ backend/src/server.js                     |  12 ++
+ backend/src/services/dynamoService.js     |  69 ++++++++
+ 5 files changed, 391 insertions(+)
+---
+commit:10c34c9db01a6d05f4a6c972623a44a78de8beee
+author:Yassin Diab <yassin.diab@student.giu-uni.de>
+date:2026-05-20 21:23:36 +0300
+subject:Team Task Modification
+refs:
+
+ .gitkeep           | 0
+ QUICK_REFERENCE.md | 4 ++--
+ README.md          | 2 +-
+ TEAM_TASKS.md      | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
+---
+commit:d7be7831326ae9b54f3c6618c585b4ac44fc909e
+author:Yassin Diab <yassin.diab@student.giu-uni.de>
+date:2026-05-20 21:13:33 +0300
+subject:refactor(team): swap JWT auth and activity log tasks between Person 3 & 4
+refs:
+
+ TEAM_TASKS.md | 36 ++++++++++++++++++++----------------
+ 1 file changed, 20 insertions(+), 16 deletions(-)
+---
+commit:43efe2154d6bc5b68f2111141f45991aa7c96d05
+author:Yassin Diab <yassin.diab@student.giu-uni.de>
+date:2026-05-20 20:58:33 +0300
+subject:feat: initialize Mini-Jira project structure for 5-person team
+refs:
+
+ .env.example                             |  43 +++
+ .gitignore                               |  56 ++++
+ .serena/.gitignore                       |   2 +
+ .serena/project.yml                      | 131 +++++++++
+ CLAUDE.md                                | 224 ++++++++++++++
+ CONTRIBUTING.md                          | 172 +++++++++++
+ QUICK_REFERENCE.md                       | 292 +++++++++++++++++++
+ README.md                                |  96 ++++++
+ TEAM_TASKS.md                            | 354 +++++++++++++++++++++++
+ backend/package.json                     |  25 ++
+ backend/src/config/dynamodb.js           | 129 +++++++++
+ backend/src/middleware/authMiddleware.js | 153 ++++++++++
+ backend/src/server.js                    |  55 ++++
+ docs/API.md                              | 456 +++++++++++++++++++++++++++++
+ docs/ARCHITECTURE.md                     | 257 +++++++++++++++++
+ docs/SETUP.md                            | 481 +++++++++++++++++++++++++++++++
+ frontend/package.json                    |  30 ++
+ package.json                             |  15 +
+ 18 files changed, 2971 insertions(+)
+---
+commit:80014544810097fbace18aaa3de7f11d17f0f3f3
+author:Yassin Diab <yassin.diab@student.giu-uni.de>
+date:2026-05-20 20:44:17 +0300
+subject:Initial Commit
+refs:
+
+ .gitkeep | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)

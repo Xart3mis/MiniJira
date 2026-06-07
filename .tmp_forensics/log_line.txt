@@ -1,0 +1,53 @@
+4164dd203f9b027d1b29451fd534c3a0d453314a | Yassin Diab <64959529+Xart3mis@users.noreply.github.com> | 2026-05-26 16:02:23 +0300 | Update README to remove next steps section
+d514664054259f61422229d3181d4f09bdb67b5a | Yassin Diab <yassin.diab@student.giu-uni.de> | 2026-05-26 16:00:34 +0300 | feat: add role fallback from db and public teams dropdown
+adc0bb6438a629be9270471186460c259072971d | Yassin Diab <yassin.diab@student.giu-uni.de> | 2026-05-23 12:54:54 +0300 | favicon
+c804716875699a7d880067601c446b81d344dfdd | Yassin Diab <yassin.diab@student.giu-uni.de> | 2026-05-23 12:53:35 +0300 | feat(frontend): wire up favicons in index.html
+d722b798794c006163a60a1dc850f2d49405f2f6 | Yassin Diab <yassin.diab@student.giu-uni.de> | 2026-05-23 12:43:50 +0300 | fix: resolve task filtering, team isolation, and UI bugs
+e8dc7ad8107aab9d25da0f0ec7a7a21f3e74c489 | Yassin Diab <yassin.diab@student.giu-uni.de> | 2026-05-23 11:32:14 +0300 | feat(upload): add processing state with image polling after S3 upload
+97814da6a486745be63db31c8b328c9d3b005371 | Yassin Diab <yassin.diab@student.giu-uni.de> | 2026-05-23 04:14:20 +0300 | fuck me sideways (finale)
+3a7da601344b260a59ca4192aa32c1a12b645cd2 | Yassin Diab <yassin.diab@student.giu-uni.de> | 2026-05-23 04:11:24 +0300 | fuck p.6
+036eaabbfcedfdd40e3c7d2d7675c56fbe700768 | Yassin Diab <yassin.diab@student.giu-uni.de> | 2026-05-23 04:10:57 +0300 | add .env* to gitignore
+6a6111515dd5f1c5403a11034e281666672ecab3 | Yassin Diab <yassin.diab@student.giu-uni.de> | 2026-05-23 04:03:00 +0300 | fix(auth): align custom:teamid attribute casing with Cognito schema
+25ad8d2cf61ca02d0063ec4120e645d47903b448 | Yassin Diab <yassin.diab@student.giu-uni.de> | 2026-05-23 03:37:16 +0300 | fix: handle teamless users gracefully and fix project dropdown
+4421baf274aba0150ed966b70a11643d0680879b | Yassin Diab <yassin.diab@student.giu-uni.de> | 2026-05-23 03:01:48 +0300 | fuck p.5
+ba94c27b770e9f5af5bdb06da74981efc13447bd | Yassin Diab <yassin.diab@student.giu-uni.de> | 2026-05-23 01:12:09 +0300 | fuck p.4
+27eca65a3ba775a4ca1036671ac58437c7e95511 | Yassin Diab <yassin.diab@student.giu-uni.de> | 2026-05-23 00:15:36 +0300 | fuck p.3
+c0853f3a5729113bd9e4c05deed4fa825187437b | Yassin Diab <yassin.diab@student.giu-uni.de> | 2026-05-23 00:15:16 +0300 | fuck p.2
+317863b50bd789c291d9bba380a109114f57f15d | Yassin Diab <yassin.diab@student.giu-uni.de> | 2026-05-23 00:11:57 +0300 | fuck
+e049c4259c2c1c967b739fbd4b8f4ab109821c40 | Yassin Diab <yassin.diab@student.giu-uni.de> | 2026-05-23 00:09:33 +0300 | add frontend build dir to server
+5d6184c58ef8dceae2509fd222791536f783bbb2 | Yassin Diab <yassin.diab@student.giu-uni.de> | 2026-05-23 00:01:17 +0300 | backend "final" changes
+e191e59ab3a78110a7695dd5f37d0440ca24157e | Yassin Diab <yassin.diab@student.giu-uni.de> | 2026-05-22 23:14:53 +0300 | frontend almost done ??
+4554492b3fa044ef064d8224ce2a9724cb78dbe6 | kanzyhany <kenzy.ibrahim@student.giu-uni.de> | 2026-05-22 18:48:40 +0300 | Merge branch 'main' of https://github.com/Xart3mis/MiniJira
+b6621513150d5aa6b1b21f32674fe140f8c150ab | kanzyhany <kenzy.ibrahim@student.giu-uni.de> | 2026-05-22 18:48:25 +0300 | updated md
+547e6708564af4e3b778b2013680fc3e176625b8 | Kinglolo7 <elsherief.ali@gmail.com> | 2026-05-22 15:36:56 +0300 | fixing auth
+a1e5c29a738255ee79c6620c705764d0e276dc45 | kanzyhany <kenzy.ibrahim@student.giu-uni.de> | 2026-05-22 14:16:52 +0300 | updated task ctrlr bc of table creation
+3e074994552cdf6699441b699a376dead0f426fd | hamzabakrr <hamzaalimohamed53@gmail.com> | 2026-05-21 22:21:06 +0300 | feat(lambda): add Windows packaging scripts and S3/SNS services
+7dda1be0a9820ceb55fd60134739982b748cdf2e | Yassin Diab <yassin.diab@student.giu-uni.de> | 2026-05-21 19:20:58 +0300 | feat(tasks): publish CloudWatch metrics TasksCreatedDaily, TasksAssignedPerTeam, TasksClosedDaily
+8c0cb958e5df3032246c247b01861f66c0b31cda | Yassin Diab <yassin.diab@student.giu-uni.de> | 2026-05-21 19:19:58 +0300 | feat(tasks): GET /api/tasks/:id/activity endpoint
+f053fa21b96d64ca253b8ad26b1bb208e7f0e9c1 | Yassin Diab <yassin.diab@student.giu-uni.de> | 2026-05-21 19:18:56 +0300 | feat(tasks): write ActivityLog entry to DynamoDB on status change
+8c7ba9dc6e92f722e345ab6b80855b3708d0f8b7 | Yassin Diab <yassin.diab@student.giu-uni.de> | 2026-05-21 19:17:41 +0300 | fix(comments): enforce team isolation + use req.user for comment author
+f9014fdf6ac9703138b1760969bd977887dcf0a9 | Yassin Diab <yassin.diab@student.giu-uni.de> | 2026-05-21 19:17:10 +0300 | fix(tasks): remove req.query auth bypass + restrict employees to status-only updates
+f3ad8b3bc36015fb7e728bead98d8f9e8c82cac8 | Yassin Diab <yassin.diab@student.giu-uni.de> | 2026-05-21 19:14:55 +0300 | feat(routes): requireRole(Manager) on all mutating team/project/task routes
+f71c1d3d22d9abaf2e9c748ecc36b962b29f284f | Yassin Diab <yassin.diab@student.giu-uni.de> | 2026-05-21 19:13:54 +0300 | fix(tasks): declare COMMENTS_TABLE + use queryByIndex in deleteTask
+c71a43e459fa4bd637411331f72e2c5c5a2eb0da | Yassin Diab <yassin.diab@student.giu-uni.de> | 2026-05-21 18:36:55 +0300 | docs: update progress lists after backend sprint
+8a528fcee646e7815d4f75d68c5beba9b903cf4b | Yassin Diab <yassin.diab@student.giu-uni.de> | 2026-05-21 18:14:04 +0300 | feat(backend): S3 presigned upload endpoint + Lambda functions + env fixes
+f9f28236724c1e9e97ee7e1167bc683308ccb887 | Yassin Diab <yassin.diab@student.giu-uni.de> | 2026-05-21 18:13:56 +0300 | feat(backend): team isolation for projects + SNS on task assignment
+089ef32d431e5df8395240887a1e05807e1f86a9 | Yassin Diab <yassin.diab@student.giu-uni.de> | 2026-05-21 18:13:50 +0300 | feat(routes): require authenticated JWT on all API routes
+a8617026d281d6102dd0c882c13f2a91f794cfc8 | Yassin Diab <yassin.diab@student.giu-uni.de> | 2026-05-21 18:13:44 +0300 | fix(auth): replace broken jwkToPem stub with jwk-to-pem library
+382a9c5b1203be63e7cfd3d88973bd746c1cbf7b | Yassin Diab <yassin.diab@student.giu-uni.de> | 2026-05-21 11:34:25 +0300 | added a completion checklist to track progress
+7a6723138717628dd5307abc5faeadb955fe42c7 | kanzyhany <kenzy.ibrahim@student.giu-uni.de> | 2026-05-21 03:00:54 +0300 | progress md file
+bdc9af26a74ce9d68780baac58fa653d44abceaa | kanzyhany <kenzy.ibrahim@student.giu-uni.de> | 2026-05-21 02:25:37 +0300 | updated region in env file
+9cf9ef686d7ac8536e69670f884b546689f5da0e | kanzyhany <kenzy.ibrahim@student.giu-uni.de> | 2026-05-21 02:21:19 +0300 | added details and safety for delete functions
+28f1a33dcc1d01766839c6a4cf3b96cf62603344 | kanzyhany <kenzy.ibrahim@student.giu-uni.de> | 2026-05-21 02:13:15 +0300 | added validation
+1fdbb3a05bb76c3f613a54837798c5083753cf5d | kanzyhany <kenzy.ibrahim@student.giu-uni.de> | 2026-05-21 01:44:03 +0300 | connecting comments on tasks
+e6ce9741c1e1d0fd334e05e113767f680a0ce4c6 | kanzyhany <kenzy.ibrahim@student.giu-uni.de> | 2026-05-21 01:37:27 +0300 | user code
+5816b1a8ff2a82e673465e6207cf545d3dfb6428 | kanzyhany <kenzy.ibrahim@student.giu-uni.de> | 2026-05-21 01:13:59 +0300 | team code
+c333b48e1c02f3a46230708b0cf649d2f4b6fdf7 | kanzyhany <kenzy.ibrahim@student.giu-uni.de> | 2026-05-21 00:42:28 +0300 | comments code
+948250a35d0e0707dc2acb5a8fb6e597fc8ca1e1 | kanzyhany <kenzy.ibrahim@student.giu-uni.de> | 2026-05-21 00:37:06 +0300 | prjs code
+d9ae363f15a6f8aee86fab07e7d2999e90c1d3c6 | kanzyhany <kenzy.ibrahim@student.giu-uni.de> | 2026-05-21 00:17:51 +0300 | updated dep
+258d527afa171710957ae216af28cd2783db505e | kanzyhany <kenzy.ibrahim@student.giu-uni.de> | 2026-05-21 00:17:33 +0300 | Merge branch 'main' of https://github.com/Xart3mis/MiniJira
+fed50a8fb0ce08d0b80422d303171a61cdeeac74 | kanzyhany <kenzy.ibrahim@student.giu-uni.de> | 2026-05-21 00:16:41 +0300 | tasks code
+10c34c9db01a6d05f4a6c972623a44a78de8beee | Yassin Diab <yassin.diab@student.giu-uni.de> | 2026-05-20 21:23:36 +0300 | Team Task Modification
+d7be7831326ae9b54f3c6618c585b4ac44fc909e | Yassin Diab <yassin.diab@student.giu-uni.de> | 2026-05-20 21:13:33 +0300 | refactor(team): swap JWT auth and activity log tasks between Person 3 & 4
+43efe2154d6bc5b68f2111141f45991aa7c96d05 | Yassin Diab <yassin.diab@student.giu-uni.de> | 2026-05-20 20:58:33 +0300 | feat: initialize Mini-Jira project structure for 5-person team
+80014544810097fbace18aaa3de7f11d17f0f3f3 | Yassin Diab <yassin.diab@student.giu-uni.de> | 2026-05-20 20:44:17 +0300 | Initial Commit

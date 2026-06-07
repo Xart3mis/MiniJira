@@ -1,0 +1,57 @@
+* 4164dd2 (HEAD -> copilot/contribution-report-analysis, origin/main, origin/copilot/contribution-report-analysis) Update README to remove next steps section
+* d514664 feat: add role fallback from db and public teams dropdown
+* adc0bb6 favicon
+* c804716 feat(frontend): wire up favicons in index.html
+* d722b79 fix: resolve task filtering, team isolation, and UI bugs
+* e8dc7ad feat(upload): add processing state with image polling after S3 upload
+* 97814da fuck me sideways (finale)
+* 3a7da60 fuck p.6
+* 036eaab add .env* to gitignore
+* 6a61115 fix(auth): align custom:teamid attribute casing with Cognito schema
+* 25ad8d2 fix: handle teamless users gracefully and fix project dropdown
+* 4421baf fuck p.5
+* ba94c27 fuck p.4
+* 27eca65 fuck p.3
+* c0853f3 fuck p.2
+* 317863b fuck
+* e049c42 add frontend build dir to server
+* 5d6184c backend "final" changes
+* e191e59 frontend almost done ??
+*   4554492 Merge branch 'main' of https://github.com/Xart3mis/MiniJira
+|\  
+| * 547e670 fixing auth
+* | b662151 updated md
+|/  
+* a1e5c29 updated task ctrlr bc of table creation
+* 3e07499 feat(lambda): add Windows packaging scripts and S3/SNS services
+* 7dda1be feat(tasks): publish CloudWatch metrics TasksCreatedDaily, TasksAssignedPerTeam, TasksClosedDaily
+* 8c0cb95 feat(tasks): GET /api/tasks/:id/activity endpoint
+* f053fa2 feat(tasks): write ActivityLog entry to DynamoDB on status change
+* 8c7ba9d fix(comments): enforce team isolation + use req.user for comment author
+* f9014fd fix(tasks): remove req.query auth bypass + restrict employees to status-only updates
+* f3ad8b3 feat(routes): requireRole(Manager) on all mutating team/project/task routes
+* f71c1d3 fix(tasks): declare COMMENTS_TABLE + use queryByIndex in deleteTask
+* c71a43e docs: update progress lists after backend sprint
+* 8a528fc feat(backend): S3 presigned upload endpoint + Lambda functions + env fixes
+* f9f2823 feat(backend): team isolation for projects + SNS on task assignment
+* 089ef32 feat(routes): require authenticated JWT on all API routes
+* a861702 fix(auth): replace broken jwkToPem stub with jwk-to-pem library
+* 382a9c5 added a completion checklist to track progress
+* 7a67231 progress md file
+* bdc9af2 updated region in env file
+* 9cf9ef6 added details and safety for delete functions
+* 28f1a33 added validation
+* 1fdbb3a connecting comments on tasks
+* e6ce974 user code
+* 5816b1a team code
+* c333b48 comments code
+* 948250a prjs code
+* d9ae363 updated dep
+*   258d527 Merge branch 'main' of https://github.com/Xart3mis/MiniJira
+|\  
+| * 10c34c9 Team Task Modification
+* | fed50a8 tasks code
+|/  
+* d7be783 refactor(team): swap JWT auth and activity log tasks between Person 3 & 4
+* 43efe21 feat: initialize Mini-Jira project structure for 5-person team
+* 8001454 Initial Commit
